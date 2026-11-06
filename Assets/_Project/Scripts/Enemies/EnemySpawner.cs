@@ -24,9 +24,15 @@ public class EnemySpawner : MonoBehaviour
 
         if (elapsed >= 1f)
         {
-            spawnInterval = Mathf.Max(minInterval, spawnInterval - intervalDecreaseSecond);
+            spawnInterval = Mathf.Max(minInterval, spawnInterval - intervalDecreasePerSecond);
             elapsed = 0f;
         }
+    }
+
+    void SpawnEnemy()
+    {
+        if (enemyPrefab == null) return;
+        Instantiate(enemyPrefab, RandomBorderPosition(), Quaternion.identity);
     }
 
     Vector3 RandomBorderPosition()
