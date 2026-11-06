@@ -13,6 +13,7 @@ public static class GameEvents
     public static event Action<int> ScoreChanged;
     public static event Action<GameObject> EnemyKilled;
     public static event Action BossDefeated;
+    public static event Action<int> CoffeeChanged;
 
     public static void RaisePlayerHealthChanged(float current, float max) => PlayerHealthChanged?.Invoke(current, max);
     public static void RaisePlayerDied() => PlayerDied?.Invoke();
@@ -21,4 +22,5 @@ public static class GameEvents
     public static void RaiseScoreChanged(int score) => ScoreChanged?.Invoke(score);
     public static void RaiseEnemyKilled(GameObject enemy) => EnemyKilled?.Invoke(enemy);
     public static void RaiseBossDefeated() => BossDefeated?.Invoke();
+    public static void RaiseCoffeeChanged(int total) => CoffeeChanged?.Invoke(total);
 }
