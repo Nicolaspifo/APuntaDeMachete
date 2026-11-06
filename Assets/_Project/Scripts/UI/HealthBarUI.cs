@@ -10,13 +10,13 @@ public class HealthBarUI : MonoBehaviour
 
     void OnEnable()
     {
-        target.OnHealthChanged += Refresh;
+        target.Changed += Refresh;
         Refresh(target.Current, target.Max);
     }
 
-    void OnDisable() => target.OnHealthChanged -= Refresh;
+    void OnDisable() => target.Changed -= Refresh;
 
-    void Refresh(int current, int max)
+    void Refresh(float current, float max)
     {
         slider.maxValue = max;
         slider.value = current;

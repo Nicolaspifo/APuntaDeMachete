@@ -8,8 +8,8 @@ public class GameOverFlow : MonoBehaviour
     [SerializeField] GameObject panel;
     [SerializeField] GameObject restartButton;
 
-    void OnEnable() => playerHealth.OnDied += ShowGameOver;
-    void OnDisable() => playerHealth.OnDied -= ShowGameOver;
+    void OnEnable() => playerHealth.Died += ShowGameOver;
+    void OnDisable() => playerHealth.Died -= ShowGameOver;
 
     void ShowGameOver()
     {
