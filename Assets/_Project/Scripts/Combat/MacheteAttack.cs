@@ -22,6 +22,8 @@ public class MacheteAttack : MonoBehaviour
     public float Damage { get => damage; set => damage = Mathf.Max(0f, value); }
     public float Cooldown { get => cooldown; set => cooldown = Mathf.Max(0.1f, value); }
     public float Range { get => range; set => range = Mathf.Max(0.1f, value); }
+    /// <summary>Apertura total del arco de golpe, en grados.</summary>
+    public float Angle => angle;
 
     public event Action<Vector2> Attacked;
     public event Action<GameObject> Hit;
