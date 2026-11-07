@@ -11,6 +11,9 @@ public class PlayerPickupCollector : MonoBehaviour
     [Header("Experiencia")]
     [SerializeField, Min(0)] private int xpPerCoffee = 1;
 
+    [Header("Depuracion")]
+    [SerializeField] private bool debugLog = false;
+
     private PlayerXP playerXP;
     private PlayerRuntimeStats runtimeStats; // opcional: radio con mejoras aplicadas
 
@@ -26,7 +29,8 @@ public class PlayerPickupCollector : MonoBehaviour
     {
         if (Instance != null && Instance != this)
         {
-            Destroy(gameObject);
+            // Solo se elimina este componente duplicado: destruir el GameObject se llevaria al jugador entero.
+            Destroy(this);
             return;
         }
         Instance = this;
@@ -69,8 +73,9 @@ public class PlayerPickupCollector : MonoBehaviour
 
         if (playerXP != null)
             playerXP.AddXP(amount * xpPerCoffee);
-            
-        Debug.Log($"[Café] Total: {CoffeeCount}");
+
+        if (debugLog)
+            Debug.Log($"[Café] Total: {CoffeeCount}");
     }
 
     private void OnDrawGizmosSelected()

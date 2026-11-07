@@ -24,6 +24,9 @@ public class PoisonOnHit : MonoBehaviour
         float dps = stats.Get(StatType.PoisonDamage);
         if (dps <= 0f) return;
 
+        // El golpe pudo matar al objetivo: no tiene sentido envenenar algo que ya murio.
+        if (target == null || (target.TryGetComponent(out IDamageable damageable) && damageable.IsDead)) return;
+
         PoisonStatus.Apply(target, dps, stats.Get(StatType.PoisonDuration), gameObject, debugLog);
     }
 }

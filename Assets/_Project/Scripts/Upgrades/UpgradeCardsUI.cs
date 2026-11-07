@@ -20,10 +20,15 @@ public class UpgradeCardsUI : MonoBehaviour
 
     bool IsAvailable(UpgradeData u) => stats == null || stats.CanApply(u);
 
-    void OnEnable()  => playerXP.OnLevelUp += HandleLevelUp;
+    void OnEnable()
+    {
+        if (playerXP != null) playerXP.OnLevelUp += HandleLevelUp;
+        else Debug.LogError("UpgradeCardsUI: falta asignar PlayerXP.", this);
+    }
+
     void OnDisable()
     {
-        playerXP.OnLevelUp -= HandleLevelUp;
+        if (playerXP != null) playerXP.OnLevelUp -= HandleLevelUp;
         PauseControl.Pop(this);
     }
 
