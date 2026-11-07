@@ -237,7 +237,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyChase
   speed: 4
-  stopDistance: 1
+  stopDistance: 2
 --- !u!114 &1503558561976460445
 MonoBehaviour:
   m_ObjectHideFlags: 0
