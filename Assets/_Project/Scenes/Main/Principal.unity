@@ -3250,6 +3250,7 @@ GameObject:
   - component: {fileID: 1567529670}
   - component: {fileID: 1567529671}
   - component: {fileID: 1567529672}
+  - component: {fileID: 1567529673}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -3425,6 +3426,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Health
   maxHealth: 100
+  invulnerabilitySeconds: 0.5
 --- !u!114 &1567529668
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3456,14 +3458,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::MacheteAttack
   damage: 5
   cooldown: 1
-  range: 100
+  range: 4.44
   angle: 120
   targetLayers:
     serializedVersion: 2
     m_Bits: 128
   followMovement: 1
   body: {fileID: 0}
-  debugLog: 1
+  debugLog: 0
 --- !u!114 &1567529670
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3494,7 +3496,7 @@ MonoBehaviour:
   health: {fileID: 0}
   baseMoveSpeed: 5
   basePickupRadius: 2
-  testUpgrade: {fileID: 11400000, guid: 0a5005a0c05b2784f98dec49ba082767, type: 2}
+  testUpgrade: {fileID: 11400000, guid: 03c14f381de1aca458065b736f48ce6d, type: 2}
   basePoisonDuration: 3
 --- !u!114 &1567529672
 MonoBehaviour:
@@ -3509,6 +3511,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HealthRegeneration
   interval: 3
+--- !u!114 &1567529673
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1567529661}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c72685a10849b5242a30253fb60bd356, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PoisonOnHit
+  debugLog: 1
 --- !u!1 &1574341474
 GameObject:
   m_ObjectHideFlags: 0
