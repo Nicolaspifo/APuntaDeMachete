@@ -37,6 +37,16 @@ public class Health : MonoBehaviour, IDamageable
         Changed?.Invoke(Current, maxHealth);
     }
 
+    public void SetMax(float newMax)
+    {
+        newMax = Mathf.Max(1f, newMax);
+        float gained = newMax - maxHealth;
+        maxHealth = newMax;
+
+        if (!IsDead) Current = Mathf.Clamp(Current + Mathf.Max(gained, 0f), 0f, maxHealth);
+        Changed?.Invoke(Current, maxHealth);
+    }
+
 #if UNITY_EDITOR
     [ContextMenu("Prueba: recibir 10 de daño")]
     private void TestDamage() => TakeDamage(10f, gameObject);

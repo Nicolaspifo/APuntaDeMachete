@@ -672,7 +672,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1390226689880487652, guid: 5c576f40662f18a4abdb410c8112a95c, type: 3}
       propertyPath: m_Enabled
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1390226689880487652, guid: 5c576f40662f18a4abdb410c8112a95c, type: 3}
       propertyPath: stopDistance
@@ -688,7 +688,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7416396290732058086, guid: 5c576f40662f18a4abdb410c8112a95c, type: 3}
       propertyPath: m_Enabled
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7425004799173960325, guid: 5c576f40662f18a4abdb410c8112a95c, type: 3}
       propertyPath: m_LocalPosition.x
