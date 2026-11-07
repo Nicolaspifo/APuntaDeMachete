@@ -30,4 +30,10 @@ public class EnemyContactDamage : MonoBehaviour
         damageable.TakeDamage(damage, gameObject);
         nextHitTime = Time.time + cooldown;
     }
+
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, range);
+    }
 }
