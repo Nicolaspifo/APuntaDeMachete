@@ -32,6 +32,7 @@ public class EnemyContactDamage : MonoBehaviour
         if (offset.magnitude > range) return;
 
         damageable.TakeDamage(damage, gameObject);
+        Debug.Log($"{name} golpeó por {damage}");   // <-- aquí
         nextHitTime = Time.time + cooldown;
         Attacked?.Invoke();
     }
