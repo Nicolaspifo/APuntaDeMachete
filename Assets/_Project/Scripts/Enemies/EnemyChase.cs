@@ -11,6 +11,10 @@ public class EnemyChase : MonoBehaviour
     [SerializeField] private bool flank = true;
     [Tooltip("Maximo de enemigos en el anillo interior (el de ataque). Menos = deja huecos para que el jugador no quede encerrado.")]
     [SerializeField, Range(3, 16)] private int maxInnerSlots = 5;
+    [Tooltip("Radio del anillo interior alrededor del jugador, igual para todos los enemigos para que sus anillos no se crucen.")]
+    [SerializeField, Min(0.5f)] private float ringBaseRadius = 1.3f;
+    [Tooltip("Hueco entre casillas vecinas, como multiplo del tamaño del enemigo. 1.0 = pegados; 1.4 = se ve aire entre ellos.")]
+    [SerializeField, Range(1f, 2.5f)] private float slotSpacingFactor = 1.4f;
 
     [Header("Llegada")]
     [Tooltip("Distancia a la que empieza a frenar al acercarse a su punto.")]
@@ -49,6 +53,7 @@ public class EnemyChase : MonoBehaviour
     private float nextReclaim;
     private float effectiveSeparation;
     private float minGap;
+    private float colliderDiameter = 1f;
     private bool separationReady;
 
     private void Awake()
@@ -85,8 +90,17 @@ public class EnemyChase : MonoBehaviour
 
     private float AttackDistance() => contact != null ? contact.Range * 0.9f : stopDistance;
 
-    /// <summary>Distancia minima entre centros de dos casillas vecinas: algo mas que el collider.</summary>
-    private float SlotSpacing() => Mathf.Max(minGap, 0.5f) * 1.15f;
+    /// <summary>
+    /// Distancia entre centros de casillas vecinas: el collider mas un hueco visible. Se redondea a 0.1
+    /// para que todos los tipos de enemigo con colliders parecidos compartan exactamente los mismos anillos.
+    /// </summary>
+    private float SlotSpacing() => Mathf.Round(Mathf.Max(colliderDiameter, 0.5f) * slotSpacingFactor * 10f) / 10f;
+
+    /// <summary>
+    /// Radio del anillo interior. Es el mismo para todos los tipos (si no, el anillo del hipopotamo y el del
+    /// zancudo se cruzan y se encimen), salvo que el alcance de ataque del enemigo no llegue hasta ahi.
+    /// </summary>
+    private float SlotBaseRadius() => Mathf.Round(Mathf.Min(ringBaseRadius, AttackDistance()) * 10f) / 10f;
 
     /// <summary>
     /// Reclama una casilla en el anillo mas interior que tenga hueco, prefiriendo el lado por el que
@@ -102,15 +116,15 @@ public class EnemyChase : MonoBehaviour
             ? Mathf.Atan2(fromPlayer.y, fromPlayer.x)
             : Random.Range(0f, Mathf.PI * 2f);
 
-        float attackDistance = AttackDistance();
+        float baseRadius = SlotBaseRadius();
         float spacing = SlotSpacing();
         int limit = onlyBetter ? slotTier : MaxTiers;
 
         for (int tier = 0; tier < limit; tier++)
         {
-            float radius = attackDistance + tier * spacing;
+            float radius = baseRadius + tier * spacing;
             int count = EnemySlots.SlotCount(radius, spacing, tier, maxInnerSlots);
-            long key = EnemySlots.RingKey(attackDistance, spacing, tier);
+            long key = EnemySlots.RingKey(baseRadius, spacing, tier);
 
             if (!EnemySlots.TryClaim(this, key, count, preferred, out float angle)) continue;
 
@@ -153,6 +167,7 @@ public class EnemyChase : MonoBehaviour
 
         effectiveSeparation = Mathf.Max(separationRadius, diameter * SeparationPerColliderSize);
         minGap = diameter * 0.95f; // por debajo de esto los colliders se solapan de verdad
+        colliderDiameter = diameter;
         separationReady = true;
     }
 
@@ -232,7 +247,7 @@ public class EnemyChase : MonoBehaviour
     private Vector2 SlotPoint()
     {
         int tier = Mathf.Min(slotTier, MaxTiers - 1);
-        float radius = AttackDistance() + tier * SlotSpacing();
+        float radius = SlotBaseRadius() + tier * SlotSpacing();
         Vector2 dir = new Vector2(Mathf.Cos(slotAngle), Mathf.Sin(slotAngle));
         return (Vector2)target.position + dir * radius;
     }
