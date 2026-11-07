@@ -12,11 +12,13 @@ public class PlayerPickupCollector : MonoBehaviour
     [SerializeField, Min(0)] private int xpPerCoffee = 1;
 
     private PlayerXP playerXP;
+    private PlayerRuntimeStats runtimeStats; // opcional: radio con mejoras aplicadas
 
     private ContactFilter2D filter;
     private readonly Collider2D[] hits = new Collider2D[32];
 
-    public float PickupRadius => pickupRadius;
+    public float PickupRadius =>
+        runtimeStats != null && runtimeStats.PickupRadius > 0f ? runtimeStats.PickupRadius : pickupRadius;
     public int CoffeeCount { get; private set; }
 
     private void Awake()
@@ -29,6 +31,7 @@ public class PlayerPickupCollector : MonoBehaviour
         Instance = this;
 
         playerXP = GetComponent<PlayerXP>();
+        TryGetComponent(out runtimeStats);
 
         filter = new ContactFilter2D
         {
@@ -46,7 +49,7 @@ public class PlayerPickupCollector : MonoBehaviour
     private void Update()
     {
         int count = Physics2D.OverlapCircle(
-            transform.position, pickupRadius, filter, hits);
+            transform.position, PickupRadius, filter, hits);
 
         for (int i = 0; i < count; i++)
         {

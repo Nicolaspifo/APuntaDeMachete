@@ -224,6 +224,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Health
   maxHealth: 10
+  invulnerabilitySeconds: 0
 --- !u!114 &7055427921132123782
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -236,8 +237,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f3b6888cd4e8f024cb754af8612eb49e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyChase
-  speed: 4
+  speed: 2.18
   stopDistance: 2
+  separationRadius: 0.8
+  separationWeight: 1.5
+  separationLayers:
+    serializedVersion: 2
+    m_Bits: 0
 --- !u!114 &1503558561976460445
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -253,6 +259,7 @@ MonoBehaviour:
   damage: 40
   range: 3.03
   cooldown: 2
+  windup: 0.25
 --- !u!114 &1944943770654409028
 MonoBehaviour:
   m_ObjectHideFlags: 0

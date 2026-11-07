@@ -11,15 +11,25 @@ public class PlayerMovement : MonoBehaviour
     [Header("Input")]
     [SerializeField] private InputActionAsset actions;
 
+    private PlayerRuntimeStats runtimeStats; // opcional: velocidad con mejoras aplicadas
     private Rigidbody2D rb;
     private InputAction moveAction;
     private Vector2 moveInput;
 
-    private float MoveSpeed => stats != null ? stats.moveSpeed : 5f;
+    private float MoveSpeed
+    {
+        get
+        {
+            // Las mejoras viven en PlayerRuntimeStats; si no existe, se usan los datos base.
+            if (runtimeStats != null && runtimeStats.MoveSpeed > 0f) return runtimeStats.MoveSpeed;
+            return stats != null ? stats.moveSpeed : 5f;
+        }
+    }
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
+        TryGetComponent(out runtimeStats);
 
         if (actions != null)
         {

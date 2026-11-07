@@ -21,7 +21,11 @@ public class UpgradeCardsUI : MonoBehaviour
     bool IsAvailable(UpgradeData u) => stats == null || stats.CanApply(u);
 
     void OnEnable()  => playerXP.OnLevelUp += HandleLevelUp;
-    void OnDisable() => playerXP.OnLevelUp -= HandleLevelUp;
+    void OnDisable()
+    {
+        playerXP.OnLevelUp -= HandleLevelUp;
+        PauseControl.Pop(this);
+    }
 
     void HandleLevelUp(int level)
     {
@@ -43,7 +47,7 @@ public class UpgradeCardsUI : MonoBehaviour
 
         isOpen = true;
         pendingLevelUps--;
-        Time.timeScale = 0f;
+        PauseControl.Push(this);
         panel.SetActive(true);
         ShowRandomCards();
         StartCoroutine(EnableInputAfterDelay());
@@ -92,7 +96,7 @@ public class UpgradeCardsUI : MonoBehaviour
         else
         {
             pendingLevelUps = 0;
-            Time.timeScale = 1f;
+            PauseControl.Pop(this);
         }
     }
 

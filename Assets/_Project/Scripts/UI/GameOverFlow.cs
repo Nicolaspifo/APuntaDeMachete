@@ -11,7 +11,7 @@ public class GameOverFlow : MonoBehaviour
     void Awake()
     {
         if (panel != null) panel.SetActive(false);
-        Time.timeScale = 1f;
+        PauseControl.Reset();
     }
 
     void OnEnable()
@@ -34,14 +34,14 @@ public class GameOverFlow : MonoBehaviour
     void ShowGameOver()
     {
         panel.SetActive(true);
-        Time.timeScale = 0f;
+        PauseControl.Push(this);
         EventSystem.current.SetSelectedGameObject(null);
         EventSystem.current.SetSelectedGameObject(restartButton);
     }
 
     public void Restart()
     {
-        Time.timeScale = 1f;
+        PauseControl.Reset();
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 }
