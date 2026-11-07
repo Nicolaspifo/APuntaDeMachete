@@ -1,0 +1,123 @@
+using System;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class MacheteAttack : MonoBehaviour
+{
+    [SerializeField, Min(0f)] private float damage = 5f;
+    [SerializeField, Min(0.1f)] private float cooldown = 1.25f;
+    [SerializeField, Min(0.1f)] private float range = 2f;
+    [SerializeField, Range(10f, 360f)] private float angle = 120f;
+    [SerializeField] private LayerMask targetLayers;
+
+    [Header("Direccion")]
+    [Tooltip("Si esta activo, el machete apunta hacia donde se mueve el Rigidbody2D de este objeto.")]
+    [SerializeField] private bool followMovement = true;
+    [SerializeField] private Rigidbody2D body;
+
+    [Header("Depuracion")]
+    [Tooltip("Imprime en consola cada golpe: direccion, candidatos, descartados e impactados.")]
+    [SerializeField] private bool debugLog = false;
+
+    public float Damage { get => damage; set => damage = Mathf.Max(0f, value); }
+    public float Cooldown { get => cooldown; set => cooldown = Mathf.Max(0.1f, value); }
+    public float Range { get => range; set => range = Mathf.Max(0.1f, value); }
+
+    public event Action<Vector2> Attacked;
+
+    private readonly HashSet<IDamageable> hitThisSwing = new();
+    private Vector2 aimDirection;
+    private float nextAttackTime;
+
+    public void SetAimDirection(Vector2 direction)
+    {
+        if (direction.sqrMagnitude > 0.01f) aimDirection = direction.normalized;
+    }
+
+    private void Awake()
+    {
+        if (body == null) TryGetComponent(out body);
+    }
+
+    private void Update()
+    {
+        if (followMovement && body != null)
+            SetAimDirection(body.linearVelocity); // se ignora si esta quieto: conserva la ultima direccion
+
+        if (Time.time < nextAttackTime) return;
+
+        Swing();
+        nextAttackTime = Time.time + cooldown;
+    }
+
+    private void Swing()
+    {
+        Vector2 forward = CurrentAim();
+        Vector2 origin = transform.position;
+        Collider2D[] hits = Physics2D.OverlapCircleAll(origin, range, targetLayers);
+
+        hitThisSwing.Clear();
+        int hitCount = 0;
+
+        if (debugLog)
+            Debug.Log($"[Machete] Golpe hacia {forward} | capas={targetLayers.value} | colliders en rango={hits.Length}", this);
+
+        foreach (Collider2D hit in hits)
+        {
+            if (hit.transform.IsChildOf(transform)) continue; // nunca golpearse a si mismo
+
+            IDamageable target = hit.GetComponentInParent<IDamageable>();
+            if (target == null)
+            {
+                if (debugLog) Debug.Log($"[Machete]   x {hit.name}: sin IDamageable (¿falta Health?)", hit);
+                continue;
+            }
+            if (target.IsDead || !hitThisSwing.Add(target)) continue;
+
+            Vector2 toTarget = (Vector2)hit.transform.position - origin;
+            float angleToTarget = Vector2.Angle(forward, toTarget);
+
+            if (angleToTarget > angle * 0.5f)
+            {
+                if (debugLog) Debug.Log($"[Machete]   x {hit.name}: fuera del arco ({angleToTarget:0}° > {angle * 0.5f:0}°)", hit);
+                continue;
+            }
+
+            target.TakeDamage(damage, gameObject);
+            hitCount++;
+            if (debugLog) Debug.Log($"[Machete]   ✓ {hit.name}: {damage} de daño a {toTarget.magnitude:0.0} u, angulo {angleToTarget:0}°, muerto={target.IsDead}", hit);
+        }
+
+        if (debugLog) Debug.Log($"[Machete] Resultado: {hitCount} impactos", this);
+
+        Attacked?.Invoke(forward);
+    }
+
+#if UNITY_EDITOR
+    [ContextMenu("Prueba: golpear ahora")]
+    private void TestSwing()
+    {
+        if (!Application.isPlaying) { Debug.LogWarning("[Machete] Solo funciona en Play Mode."); return; }
+        Swing();
+    }
+#endif
+
+    private Vector2 CurrentAim()
+    {
+        // Sin direccion de apuntado, usa el eje X local (derecha) del objeto.
+        return aimDirection.sqrMagnitude > 0.01f ? aimDirection : (Vector2)transform.right;
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        Vector2 forward = Application.isPlaying ? CurrentAim() : (Vector2)transform.right;
+
+        Vector3 left = Quaternion.Euler(0f, 0f, angle * 0.5f) * (Vector3)forward;
+        Vector3 right = Quaternion.Euler(0f, 0f, -angle * 0.5f) * (Vector3)forward;
+
+        Gizmos.color = Color.cyan;
+        Gizmos.DrawWireSphere(transform.position, range);
+        Gizmos.DrawLine(transform.position, transform.position + left * range);
+        Gizmos.DrawLine(transform.position, transform.position + right * range);
+    }
+}
