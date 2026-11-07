@@ -522,11 +522,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1390226689880487652, guid: 5c576f40662f18a4abdb410c8112a95c, type: 3}
       propertyPath: stopDistance
-      value: 1.33
+      value: 1.35
       objectReference: {fileID: 0}
     - target: {fileID: 6203631419841849656, guid: 5c576f40662f18a4abdb410c8112a95c, type: 3}
       propertyPath: m_Name
       value: Enemy_Zancudo
+      objectReference: {fileID: 0}
+    - target: {fileID: 7416396290732058086, guid: 5c576f40662f18a4abdb410c8112a95c, type: 3}
+      propertyPath: range
+      value: 1.34
       objectReference: {fileID: 0}
     - target: {fileID: 7425004799173960325, guid: 5c576f40662f18a4abdb410c8112a95c, type: 3}
       propertyPath: m_LocalPosition.x

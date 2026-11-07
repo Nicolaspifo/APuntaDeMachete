@@ -28,4 +28,10 @@ public class EnemyChase : MonoBehaviour
         Vector2 step = direction.normalized * (speed * Time.fixedDeltaTime);
         body.MovePosition(body.position + step);
     }
+
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(transform.position, stopDistance);
+    }
 }
