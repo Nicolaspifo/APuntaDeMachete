@@ -31,7 +31,9 @@ public class GameManager : MonoBehaviour
 
     private void OnDestroy()
     {
-        if (Instance == this) Instance = null;
+        if (Instance != this) return;
+        PauseControl.Pop(this);
+        Instance = null;
     }
 
     public void SetState(GameState newState, bool force = false)
@@ -42,7 +44,10 @@ public class GameManager : MonoBehaviour
         CurrentState = newState;
 
         if (pauseWithTimeScale)
-            Time.timeScale = newState == GameState.Playing ? 1f : 0f;
+        {
+            if (newState == GameState.Playing) PauseControl.Pop(this);
+            else PauseControl.Push(this);
+        }
 
         Debug.Log($"[GameManager] {previous} -> {newState}");
         OnStateChanged?.Invoke(previous, newState);

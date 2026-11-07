@@ -128,7 +128,7 @@ GameObject:
   - component: {fileID: -5497200916493339669}
   - component: {fileID: -101751274138356924}
   - component: {fileID: 2892628272935405323}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Enemy_Hipopotamo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -223,7 +223,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1006f460344ff7c45a54d138ab0b6b35, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Health
-  maxHealth: 10
+  maxHealth: 12
+  invulnerabilitySeconds: 0
 --- !u!114 &7055427921132123782
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -236,8 +237,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f3b6888cd4e8f024cb754af8612eb49e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyChase
-  speed: 4
+  speed: 2.32
   stopDistance: 2
+  flank: 1
+  flankSpread: 158
+  arriveSlowRadius: 0.8
+  arriveTolerance: 0.2
+  separationRadius: 1.34
+  separationWeight: 1.5
+  separationLayers:
+    serializedVersion: 2
+    m_Bits: 128
 --- !u!114 &1503558561976460445
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -250,9 +260,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ac3bbd6c1de9504ea4eca912481743b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyContactDamage
-  damage: 40
-  range: 3.03
+  damage: 12.1
+  range: 2.23
   cooldown: 2
+  windup: 0.64
+  recover: 0.6
+  damageRadiusScale: 0.9
+  maxConcurrentAttackers: 3
 --- !u!114 &1944943770654409028
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -280,7 +294,7 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDamping: 0
   m_AngularDamping: 0.05
-  m_GravityScale: 1
+  m_GravityScale: 0
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
