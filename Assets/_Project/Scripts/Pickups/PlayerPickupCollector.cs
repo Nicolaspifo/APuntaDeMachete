@@ -8,6 +8,11 @@ public class PlayerPickupCollector : MonoBehaviour
     [SerializeField, Min(0f)] private float pickupRadius = 2.5f;
     [SerializeField] private LayerMask pickupLayers = ~0;
 
+    [Header("Experiencia")]
+    [SerializeField, Min(0)] private int xpPerCoffee = 1;
+
+    private PlayerXP playerXP;
+
     private ContactFilter2D filter;
     private readonly Collider2D[] hits = new Collider2D[32];
 
@@ -22,6 +27,8 @@ public class PlayerPickupCollector : MonoBehaviour
             return;
         }
         Instance = this;
+
+        playerXP = GetComponent<PlayerXP>();
 
         filter = new ContactFilter2D
         {
@@ -55,6 +62,10 @@ public class PlayerPickupCollector : MonoBehaviour
 
         CoffeeCount += amount;
         GameEvents.RaiseCoffeeChanged(CoffeeCount);
+
+        if (playerXP != null)
+            playerXP.AddXP(amount * xpPerCoffee);
+            
         Debug.Log($"[Café] Total: {CoffeeCount}");
     }
 
