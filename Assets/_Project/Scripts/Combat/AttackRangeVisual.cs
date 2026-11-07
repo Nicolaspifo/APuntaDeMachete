@@ -14,6 +14,9 @@ public class AttackRangeVisual : MonoBehaviour
 
     private Color baseColor;
     private float hideAt;
+    private bool winding;
+    private float windupStart;
+    private float windupEnd;
 
     private void Awake()
     {
@@ -30,13 +33,21 @@ public class AttackRangeVisual : MonoBehaviour
     private void OnEnable()
     {
         if (playerAttack != null) playerAttack.Attacked += OnPlayerAttacked;
-        if (enemyAttack != null) enemyAttack.Attacked += OnEnemyAttacked;
+        if (enemyAttack != null)
+        {
+            enemyAttack.Attacked += OnEnemyAttacked;
+            enemyAttack.WindupStarted += OnEnemyWindup;
+        }
     }
 
     private void OnDisable()
     {
         if (playerAttack != null) playerAttack.Attacked -= OnPlayerAttacked;
-        if (enemyAttack != null) enemyAttack.Attacked -= OnEnemyAttacked;
+        if (enemyAttack != null)
+        {
+            enemyAttack.Attacked -= OnEnemyAttacked;
+            enemyAttack.WindupStarted -= OnEnemyWindup;
+        }
     }
 
     private void OnPlayerAttacked(Vector2 direction)
@@ -53,7 +64,22 @@ public class AttackRangeVisual : MonoBehaviour
 
     private void OnEnemyAttacked()
     {
+        // El golpe conecto: destello breve a intensidad plena.
+        winding = false;
         Show(enemyAttack.Range);
+    }
+
+    /// <summary>El enemigo empieza a cargar: el area se va llenando hasta el golpe.</summary>
+    private void OnEnemyWindup(float seconds)
+    {
+        if (scaleToRange)
+            transform.localScale = Vector3.one * (enemyAttack.Range * 2f);
+
+        if (visual != null) visual.enabled = true;
+
+        winding = true;
+        windupStart = Time.time;
+        windupEnd = Time.time + Mathf.Max(seconds, 0.01f);
     }
 
     public void Show(float range)
@@ -73,7 +99,27 @@ public class AttackRangeVisual : MonoBehaviour
 
     private void Update()
     {
-        if (visual == null || !visual.enabled) return;
+        if (visual == null) return;
+
+        if (winding)
+        {
+            // Sigue la simulacion (Time.time): se congela en pausa junto con el enemigo.
+            float t = Mathf.Clamp01((Time.time - windupStart) / (windupEnd - windupStart));
+            Color windupColor = baseColor;
+            windupColor.a = baseColor.a * Mathf.Lerp(0.15f, 1f, t);
+            visual.color = windupColor;
+            visual.enabled = true;
+
+            if (Time.time >= windupEnd)
+            {
+                // Si el golpe conecta, Attacked lo sustituye por el destello. Si falla, se desvanece.
+                winding = false;
+                hideAt = Time.unscaledTime + duration;
+            }
+            return;
+        }
+
+        if (!visual.enabled) return;
 
         // Usamos tiempo sin escalar para que funcione incluso en pausa (timeScale = 0).
         float remaining = hideAt - Time.unscaledTime;
