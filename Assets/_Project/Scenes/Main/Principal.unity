@@ -2471,7 +2471,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6f4e83fa612808947ac2b89c29eb1951, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemySpawner
-  enemyPrefab: {fileID: 6203631419841849656, guid: 5c576f40662f18a4abdb410c8112a95c, type: 3}
+  enemies:
+  - prefab: {fileID: 6203631419841849656, guid: 5c576f40662f18a4abdb410c8112a95c, type: 3}
+    weight: 3
+  - prefab: {fileID: 9121166166713209676, guid: b201dc8c1b129a74a9ffad795b879bad, type: 3}
+    weight: 1
+  enemiesPerSpawn: 2
+  maxAlive: 20
   arenaHalfSize: {x: 10, y: 10}
   spawnInterval: 3
   minInterval: 0.5
