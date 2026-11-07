@@ -9,6 +9,7 @@ public class PlayerRuntimeStats : MonoBehaviour
     [SerializeField, Min(0f)] private float baseMoveSpeed = 5f;
     [SerializeField, Min(0f)] private float basePickupRadius = 2f;
     [SerializeField] private UpgradeData testUpgrade;
+    [SerializeField, Min(0f)] private float basePoisonDuration = 3f;
 
     private readonly List<UpgradeData> upgrades = new();
     private readonly Dictionary<StatType, float> baseValues = new();
@@ -30,6 +31,9 @@ public class PlayerRuntimeStats : MonoBehaviour
         baseValues[StatType.MaxHealth] = health.Max;
         baseValues[StatType.MoveSpeed] = baseMoveSpeed;
         baseValues[StatType.PickupRadius] = basePickupRadius;
+        baseValues[StatType.PoisonDamage] = 0f;
+        baseValues[StatType.PoisonDuration] = basePoisonDuration;
+        baseValues[StatType.Regeneration] = 0f;
 
         Recalculate();
     }
