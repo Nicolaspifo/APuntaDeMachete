@@ -24,6 +24,7 @@ public class MacheteAttack : MonoBehaviour
     public float Range { get => range; set => range = Mathf.Max(0.1f, value); }
 
     public event Action<Vector2> Attacked;
+    public event Action<GameObject> Hit;
 
     private readonly HashSet<IDamageable> hitThisSwing = new();
     private Vector2 aimDirection;
@@ -84,6 +85,7 @@ public class MacheteAttack : MonoBehaviour
             }
 
             target.TakeDamage(damage, gameObject);
+            if(target is Component component) Hit?.Invoke(component.gameObject);
             hitCount++;
             if (debugLog) Debug.Log($"[Machete]   ✓ {hit.name}: {damage} de daño a {toTarget.magnitude:0.0} u, angulo {angleToTarget:0}°, muerto={target.IsDead}", hit);
         }

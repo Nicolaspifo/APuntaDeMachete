@@ -1,6 +1,6 @@
 using System;
 
-public enum StatType { Damage, AttackCooldown, AttackRange, MoveSpeed, MaxHealth, PickupRadius }
+public enum StatType { Damage, AttackCooldown, AttackRange, MoveSpeed, MaxHealth, PickupRadius,PoisonDamage, PoisonDuration, Regeneration  }
 public enum ModifierOp { Add, Multiply }
 
 [Serializable]
