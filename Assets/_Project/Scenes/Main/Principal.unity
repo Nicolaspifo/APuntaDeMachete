@@ -522,7 +522,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1390226689880487652, guid: 5c576f40662f18a4abdb410c8112a95c, type: 3}
       propertyPath: m_Enabled
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1390226689880487652, guid: 5c576f40662f18a4abdb410c8112a95c, type: 3}
       propertyPath: stopDistance
@@ -538,7 +538,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7416396290732058086, guid: 5c576f40662f18a4abdb410c8112a95c, type: 3}
       propertyPath: m_Enabled
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7425004799173960325, guid: 5c576f40662f18a4abdb410c8112a95c, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1079,6 +1079,7 @@ GameObject:
   - component: {fileID: 1567529667}
   - component: {fileID: 1567529668}
   - component: {fileID: 1567529669}
+  - component: {fileID: 1567529670}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -1290,6 +1291,23 @@ MonoBehaviour:
   followMovement: 1
   body: {fileID: 0}
   debugLog: 1
+--- !u!114 &1567529670
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1567529661}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a98c6d0923c704418d47150c19002d6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerRuntimeStats
+  machete: {fileID: 0}
+  health: {fileID: 0}
+  baseMoveSpeed: 5
+  basePickupRadius: 2
+  testUpgrade: {fileID: 11400000, guid: 0a5005a0c05b2784f98dec49ba082767, type: 2}
 --- !u!1 &1574341474
 GameObject:
   m_ObjectHideFlags: 0
