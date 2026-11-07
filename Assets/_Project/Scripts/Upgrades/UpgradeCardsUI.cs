@@ -7,6 +7,7 @@ public class UpgradeCardsUI : MonoBehaviour
 {
     [SerializeField] PlayerXP playerXP;
     [SerializeField] PlayerRuntimeStats stats;
+    [SerializeField] Health playerHealth;
     [SerializeField] GameObject panel;
     [SerializeField] UpgradeCardView[] cards;
     [SerializeField] List<UpgradeData> pool;
@@ -24,6 +25,7 @@ public class UpgradeCardsUI : MonoBehaviour
 
     void HandleLevelUp(int level)
     {
+        if (playerHealth != null && playerHealth.IsDead) return;
         if (pool == null || !pool.Exists(IsAvailable)) return;
 
         pendingLevelUps++;
