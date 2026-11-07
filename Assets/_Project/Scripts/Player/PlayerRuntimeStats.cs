@@ -20,6 +20,14 @@ public class PlayerRuntimeStats : MonoBehaviour
     public float MoveSpeed => Get(StatType.MoveSpeed);
     public float PickupRadius => Get(StatType.PickupRadius);
 
+    /// <summary>Cuanto vale la velocidad con mejoras respecto a la base (1 = sin mejoras).</summary>
+    public float MoveSpeedMultiplier => Ratio(MoveSpeed, baseMoveSpeed);
+    /// <summary>Cuanto vale el radio de recogida con mejoras respecto a la base (1 = sin mejoras).</summary>
+    public float PickupRadiusMultiplier => Ratio(PickupRadius, basePickupRadius);
+
+    private static float Ratio(float value, float baseValue) =>
+        baseValue > 0f && value > 0f ? value / baseValue : 1f;
+
     private void Awake()
     {
         if (machete == null) machete = GetComponent<MacheteAttack>();

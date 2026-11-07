@@ -6,6 +6,10 @@ public class PoisonOnHit : MonoBehaviour
     private MacheteAttack machete;
     private PlayerRuntimeStats stats;
 
+    [Header("Depuracion")]
+    [Tooltip("Imprime en consola cuando se aplica, refresca, hace tick y termina el veneno.")]
+    [SerializeField] private bool debugLog = false;
+
     private void Awake()
     {
         machete = GetComponent<MacheteAttack>();
@@ -20,6 +24,6 @@ public class PoisonOnHit : MonoBehaviour
         float dps = stats.Get(StatType.PoisonDamage);
         if (dps <= 0f) return;
 
-        PoisonStatus.Apply(target, dps, stats.Get(StatType.PoisonDuration), gameObject);
+        PoisonStatus.Apply(target, dps, stats.Get(StatType.PoisonDuration), gameObject, debugLog);
     }
 }

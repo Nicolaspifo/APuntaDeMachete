@@ -20,15 +20,16 @@ public class PlayerMovement : MonoBehaviour
     {
         get
         {
-            // Las mejoras viven en PlayerRuntimeStats; si no existe, se usan los datos base.
-            if (runtimeStats != null && runtimeStats.MoveSpeed > 0f) return runtimeStats.MoveSpeed;
-            return stats != null ? stats.moveSpeed : 5f;
+            // La velocidad base sale de PlayerStats; las mejoras (PlayerRuntimeStats) solo la multiplican.
+            float baseSpeed = stats != null ? stats.moveSpeed : 5f;
+            return runtimeStats != null ? baseSpeed * runtimeStats.MoveSpeedMultiplier : baseSpeed;
         }
     }
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
+        rb.interpolation = RigidbodyInterpolation2D.Interpolate; // evita vibracion al chocar y con la camara
         TryGetComponent(out runtimeStats);
 
         if (actions != null)

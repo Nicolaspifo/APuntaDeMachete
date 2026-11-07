@@ -126,13 +126,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f3b6888cd4e8f024cb754af8612eb49e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyChase
-  speed: 3.04
+  speed: 3.45
   stopDistance: 1.15
-  separationRadius: 0.8
+  flank: 1
+  flankSpread: 70
+  arriveSlowRadius: 0.8
+  arriveTolerance: 0.2
+  separationRadius: 1.1
   separationWeight: 1.5
   separationLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 128
 --- !u!114 &7416396290732058086
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -149,6 +153,9 @@ MonoBehaviour:
   range: 1.41
   cooldown: 1
   windup: 0.25
+  recover: 0.3
+  damageRadiusScale: 0.9
+  maxConcurrentAttackers: 3
 --- !u!114 &4396997100363949059
 MonoBehaviour:
   m_ObjectHideFlags: 0

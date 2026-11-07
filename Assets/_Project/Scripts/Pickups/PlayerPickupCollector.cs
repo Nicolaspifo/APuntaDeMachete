@@ -17,8 +17,9 @@ public class PlayerPickupCollector : MonoBehaviour
     private ContactFilter2D filter;
     private readonly Collider2D[] hits = new Collider2D[32];
 
+    // El radio base es el de este componente; las mejoras (PlayerRuntimeStats) solo lo multiplican.
     public float PickupRadius =>
-        runtimeStats != null && runtimeStats.PickupRadius > 0f ? runtimeStats.PickupRadius : pickupRadius;
+        runtimeStats != null ? pickupRadius * runtimeStats.PickupRadiusMultiplier : pickupRadius;
     public int CoffeeCount { get; private set; }
 
     private void Awake()
