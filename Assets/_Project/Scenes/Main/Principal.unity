@@ -1741,6 +1741,7 @@ GameObject:
   - component: {fileID: 1567529668}
   - component: {fileID: 1567529669}
   - component: {fileID: 1567529670}
+  - component: {fileID: 1567529671}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -1969,6 +1970,24 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerXP
   baseXpToLevel: 5
   xpIncreasePerLevel: 3
+--- !u!114 &1567529671
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1567529661}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a98c6d0923c704418d47150c19002d6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerRuntimeStats
+  machete: {fileID: 0}
+  health: {fileID: 0}
+  baseMoveSpeed: 5
+  basePickupRadius: 2
+  testUpgrade: {fileID: 11400000, guid: 0a5005a0c05b2784f98dec49ba082767, type: 2}
+  basePoisonDuration: 3
 --- !u!1 &1574341474
 GameObject:
   m_ObjectHideFlags: 0
