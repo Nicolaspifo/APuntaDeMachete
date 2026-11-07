@@ -14,9 +14,17 @@ public static class EnemySlots
     private static readonly Dictionary<long, object> taken = new();
     private static readonly Dictionary<object, long> owned = new();
 
-    /// <summary>Clave unica del anillo: mismo radio base y separacion + numero de anillo.</summary>
-    public static long RingKey(float baseRadius, float spacing, int tier) =>
-        ((long)Mathf.RoundToInt(baseRadius * 10f) * 1000L + Mathf.RoundToInt(spacing * 10f)) * 10L + tier;
+    /// <summary>
+    /// Clave unica del anillo: mismo radio base, separacion y numero de anillo. En el anillo interior tambien
+    /// cuenta <paramref name="maxInner"/> (cambia cuantas casillas tiene y por tanto sus angulos), asi dos
+    /// enemigos configurados distinto nunca comparten indices que significan angulos diferentes.
+    /// </summary>
+    public static long RingKey(float baseRadius, float spacing, int tier, int maxInner)
+    {
+        long key = (long)Mathf.RoundToInt(baseRadius * 10f) * 1000L + Mathf.RoundToInt(spacing * 10f);
+        key = key * 100L + (tier == 0 ? Mathf.Clamp(maxInner, 0, 99) : 0);
+        return key * 10L + tier;
+    }
 
     /// <summary>Casillas que caben en un anillo de este radio; el anillo interior puede limitarse para dejar huecos.</summary>
     public static int SlotCount(float radius, float spacing, int tier, int maxInner)

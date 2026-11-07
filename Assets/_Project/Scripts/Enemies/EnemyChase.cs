@@ -124,7 +124,7 @@ public class EnemyChase : MonoBehaviour
         {
             float radius = baseRadius + tier * spacing;
             int count = EnemySlots.SlotCount(radius, spacing, tier, maxInnerSlots);
-            long key = EnemySlots.RingKey(baseRadius, spacing, tier);
+            long key = EnemySlots.RingKey(baseRadius, spacing, tier, maxInnerSlots);
 
             if (!EnemySlots.TryClaim(this, key, count, preferred, out float angle)) continue;
 
@@ -194,6 +194,7 @@ public class EnemyChase : MonoBehaviour
     private void FixedUpdate()
     {
         if (!separationReady) ComputeSeparation();
+        if (debugLog) DebugTick();
 
         if (target == null)
         {
@@ -296,9 +297,9 @@ public class EnemyChase : MonoBehaviour
 
     private float nextDebugTime;
 
-    private void LateUpdate()
+    private void DebugTick()
     {
-        if (!debugLog || Time.time < nextDebugTime) return;
+        if (Time.time < nextDebugTime) return;
 
         nextDebugTime = Time.time + 1f;
         LogState();

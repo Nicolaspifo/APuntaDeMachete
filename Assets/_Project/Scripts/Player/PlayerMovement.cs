@@ -16,6 +16,12 @@ public class PlayerMovement : MonoBehaviour
     private InputAction moveAction;
     private Vector2 moveInput;
 
+    /// <summary>
+    /// Ultima direccion que el jugador pulso (zero hasta que se mueve por primera vez). Sale del input, no de la
+    /// velocidad del Rigidbody: si el jugador empuja contra enemigos la velocidad real es ~0 pero la direccion sigue.
+    /// </summary>
+    public Vector2 LastMoveDirection { get; private set; }
+
     private float MoveSpeed
     {
         get
@@ -54,6 +60,9 @@ public class PlayerMovement : MonoBehaviour
         if (moveAction == null) return;
 
         moveInput = Vector2.ClampMagnitude(moveAction.ReadValue<Vector2>(), 1f);
+
+        if (moveInput.sqrMagnitude > 0.01f)
+            LastMoveDirection = moveInput.normalized;
     }
 
     private void FixedUpdate()

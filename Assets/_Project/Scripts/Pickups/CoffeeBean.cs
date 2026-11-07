@@ -17,6 +17,17 @@ public class CoffeeBean : MonoBehaviour
 
     public int Value => value;
 
+    private void Awake()
+    {
+        // El grano se mueve cada frame (iman). Un collider sin Rigidbody2D es "estatico" y moverlo obliga a
+        // reconstruir la fisica 2D cada frame; con un cuerpo cinematico es barato y no cae ni recibe empujes.
+        if (!TryGetComponent(out Rigidbody2D rb))
+            rb = gameObject.AddComponent<Rigidbody2D>();
+
+        rb.bodyType = RigidbodyType2D.Kinematic;
+        rb.gravityScale = 0f;
+    }
+
     private void Start()
     {
         if (lifetime > 0f)

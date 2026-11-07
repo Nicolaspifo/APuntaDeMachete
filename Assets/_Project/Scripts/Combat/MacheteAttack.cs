@@ -11,7 +11,7 @@ public class MacheteAttack : MonoBehaviour
     [SerializeField] private LayerMask targetLayers;
 
     [Header("Direccion")]
-    [Tooltip("Si esta activo, el machete apunta hacia donde se mueve el Rigidbody2D de este objeto.")]
+    [Tooltip("Si esta activo, el machete apunta hacia donde el jugador pulsa moverse (PlayerMovement), o hacia donde se mueve el Rigidbody2D si no hay PlayerMovement.")]
     [SerializeField] private bool followMovement = true;
     [SerializeField] private Rigidbody2D body;
 
@@ -27,6 +27,8 @@ public class MacheteAttack : MonoBehaviour
     public event Action<GameObject> Hit;
 
     private readonly HashSet<IDamageable> hitThisSwing = new();
+    private readonly Collider2D[] hitBuffer = new Collider2D[32]; // reutilizado: evita reservar memoria en cada golpe
+    private PlayerMovement movement;
     private Vector2 aimDirection;
     private float nextAttackTime;
 
@@ -38,12 +40,18 @@ public class MacheteAttack : MonoBehaviour
     private void Awake()
     {
         if (body == null) TryGetComponent(out body);
+        TryGetComponent(out movement);
     }
 
     private void Update()
     {
-        if (followMovement && body != null)
-            SetAimDirection(body.linearVelocity); // se ignora si esta quieto: conserva la ultima direccion
+        if (followMovement)
+        {
+            // Preferimos la direccion del input: la velocidad real baja a ~0 si el jugador empuja contra enemigos.
+            // Si esta quieto, SetAimDirection ignora el vector nulo y se conserva la ultima direccion.
+            if (movement != null) SetAimDirection(movement.LastMoveDirection);
+            else if (body != null) SetAimDirection(body.linearVelocity);
+        }
 
         if (Time.time < nextAttackTime) return;
 
@@ -55,16 +63,18 @@ public class MacheteAttack : MonoBehaviour
     {
         Vector2 forward = CurrentAim();
         Vector2 origin = transform.position;
-        Collider2D[] hits = Physics2D.OverlapCircleAll(origin, range, targetLayers);
+        ContactFilter2D filter = new ContactFilter2D { useLayerMask = true, layerMask = targetLayers, useTriggers = true };
+        int candidates = Physics2D.OverlapCircle(origin, range, filter, hitBuffer);
 
         hitThisSwing.Clear();
         int hitCount = 0;
 
         if (debugLog)
-            Debug.Log($"[Machete] Golpe hacia {forward} | capas={targetLayers.value} | colliders en rango={hits.Length}", this);
+            Debug.Log($"[Machete] Golpe hacia {forward} | capas={targetLayers.value} | colliders en rango={candidates}", this);
 
-        foreach (Collider2D hit in hits)
+        for (int i = 0; i < candidates; i++)
         {
+            Collider2D hit = hitBuffer[i];
             if (hit.transform.IsChildOf(transform)) continue; // nunca golpearse a si mismo
 
             IDamageable target = hit.GetComponentInParent<IDamageable>();

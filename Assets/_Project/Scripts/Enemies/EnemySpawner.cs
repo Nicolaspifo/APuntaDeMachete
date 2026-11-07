@@ -16,6 +16,11 @@ public class EnemySpawner : MonoBehaviour
     [SerializeField, Min(1)] private int maxAlive = 20;
 
     [Header("Zona de spawn")]
+    [Tooltip("Calcula el borde de spawn desde la camara (ortho x aspecto + margen), asi los enemigos nacen siempre fuera de la vista en cualquier resolucion.")]
+    [SerializeField] private bool useCameraBounds = true;
+    [Tooltip("Distancia extra fuera del encuadre de la camara donde aparecen.")]
+    [SerializeField, Min(0f)] private float cameraMargin = 2f;
+    [Tooltip("Solo se usa si no hay camara ortografica o Use Camera Bounds esta apagado.")]
     [SerializeField] private Vector2 arenaHalfSize = new Vector2(10f, 10f);
 
     [Header("Ritmo")]
@@ -108,25 +113,48 @@ public class EnemySpawner : MonoBehaviour
         return null;
     }
 
+    /// <summary>
+    /// Centro y medio tamaño del rectangulo de spawn. Con camara ortografica sale del encuadre real
+    /// (la camara ve mas ancho que alto, p. ej. 17.8 x 10 en 16:9); si no, se usa arenaHalfSize.
+    /// </summary>
+    private void GetSpawnArea(out Vector3 center, out Vector2 halfSize)
+    {
+        Camera cam = useCameraBounds ? Camera.main : null;
+
+        if (cam != null && cam.orthographic)
+        {
+            halfSize = new Vector2(
+                cam.orthographicSize * cam.aspect + cameraMargin,
+                cam.orthographicSize + cameraMargin);
+            Vector3 camPos = cam.transform.position;
+            center = new Vector3(camPos.x, camPos.y, transform.position.z);
+            return;
+        }
+
+        center = transform.position;
+        halfSize = arenaHalfSize;
+    }
+
     private Vector3 RandomBorderPosition()
     {
-        float x = Random.Range(-arenaHalfSize.x, arenaHalfSize.x);
-        float y = Random.Range(-arenaHalfSize.y, arenaHalfSize.y);
-        Vector3 center = transform.position;
+        GetSpawnArea(out Vector3 center, out Vector2 half);
+
+        float x = Random.Range(-half.x, half.x);
+        float y = Random.Range(-half.y, half.y);
 
         switch (Random.Range(0, 4))
         {
             case 0:
-                return new Vector3(center.x - arenaHalfSize.x, center.y + y, center.z);
+                return new Vector3(center.x - half.x, center.y + y, center.z);
 
             case 1:
-                return new Vector3(center.x + arenaHalfSize.x, center.y + y, center.z);
+                return new Vector3(center.x + half.x, center.y + y, center.z);
 
             case 2:
-                return new Vector3(center.x + x, center.y - arenaHalfSize.y, center.z);
+                return new Vector3(center.x + x, center.y - half.y, center.z);
 
             default:
-                return new Vector3(center.x + x, center.y + arenaHalfSize.y, center.z);
+                return new Vector3(center.x + x, center.y + half.y, center.z);
         }
     }
 
@@ -141,8 +169,7 @@ public class EnemySpawner : MonoBehaviour
 
     private void OnDrawGizmosSelected()
     {
-        Gizmos.DrawWireCube(
-            transform.position,
-            new Vector3(arenaHalfSize.x * 2f, arenaHalfSize.y * 2f, 0f));
+        GetSpawnArea(out Vector3 center, out Vector2 half);
+        Gizmos.DrawWireCube(center, new Vector3(half.x * 2f, half.y * 2f, 0f));
     }
 }

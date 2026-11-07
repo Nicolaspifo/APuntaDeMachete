@@ -27,7 +27,10 @@ public class GameOverFlow : MonoBehaviour
 
     void Update()
     {
-        if (panel.activeSelf && EventSystem.current.currentSelectedGameObject == null)
+        if (panel == null || EventSystem.current == null || !panel.activeSelf) return;
+
+        // Si se pierde el foco (clic en vacio con raton), lo devolvemos al boton para no dejar el gamepad sin control.
+        if (EventSystem.current.currentSelectedGameObject == null)
             EventSystem.current.SetSelectedGameObject(restartButton);
     }
 
