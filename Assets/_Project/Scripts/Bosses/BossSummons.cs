@@ -12,7 +12,13 @@ public class BossSummons : MonoBehaviour
         [Tooltip("Vida extra de este refuerzo (se multiplica sobre la dificultad actual).")] public float hpMultiplier = 1f;
         [Tooltip("Daño extra de este refuerzo.")] public float damageMultiplier = 1f;
     }
-    [Serializable] public class PhaseSummons { public float interval = 8f; public Entry[] entries; }
+    [Serializable] public class PhaseSummons
+    {
+        public float interval = 8f;
+        [Tooltip("Tandas que invoca en esta etapa antes de parar (0 = sin limite). Para etapas finales: pocas tandas, mas espacio para pelear.")]
+        public int maxWaves = 0;
+        public Entry[] entries;
+    }
 
     [SerializeField] PhaseSummons[] phases;   // 4 elementos: etapa 1 (100-75 %), 2, 3 y 4
     [SerializeField] float spawnRadius = 3f;
@@ -23,6 +29,7 @@ public class BossSummons : MonoBehaviour
     BossLlorona boss;
     readonly List<GameObject> alive = new List<GameObject>();
     float timer;
+    int wavesThisPhase;
 
     void Reset()
     {
@@ -40,7 +47,7 @@ public class BossSummons : MonoBehaviour
     void Start()
     {
         timer = firstDelay;
-        boss.OnPhaseChanged += _ => { SummonWave(); timer = Current().interval; };
+        boss.OnPhaseChanged += _ => { wavesThisPhase = 0; SummonWave(); timer = Current().interval; };
         boss.OnDefeated += OnBossDefeated;
     }
 
@@ -62,8 +69,12 @@ public class BossSummons : MonoBehaviour
     {
         if (phases == null || phases.Length == 0) return;
 
+        PhaseSummons phase = Current();
+        if (phase.maxWaves > 0 && wavesThisPhase >= phase.maxWaves) return;
+        wavesThisPhase++;
+
         alive.RemoveAll(g => g == null);
-        var entries = Current().entries;
+        var entries = phase.entries;
         if (entries == null) return;
 
         foreach (var e in entries)

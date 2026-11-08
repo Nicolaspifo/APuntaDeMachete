@@ -12,6 +12,8 @@ public class CryAttack : MonoBehaviour
     [Tooltip("Daño del aro como fraccion de la vida maxima del jugador (0.3 = 30 %). El aturdimiento lo dan las casillas del suelo.")]
     [SerializeField, Range(0f, 1f)] float ringDamagePercent = 0.25f;
     [SerializeField] float firstCryDelay = 3f;
+    [Tooltip("Segundos despues del canto en los que el jefe NO empieza ataques (embestidas): tras gritar, respira.")]
+    [SerializeField, Min(0f)] float attackHoldAfterCry = 2.5f;
     [SerializeField] Color warningColor = new Color(1f, 0.2f, 0.2f, 1f);
     [SerializeField] Material lineMaterial;   // opcional
 
@@ -97,6 +99,7 @@ public class CryAttack : MonoBehaviour
         }
 
         boss.MovementLocked = false;
+        if (TryGetComponent(out EnemyContactDamage contact)) contact.Hold(attackHoldAfterCry);
         cooldown = Pick(intervalPerPhase);
         crying = false;
     }

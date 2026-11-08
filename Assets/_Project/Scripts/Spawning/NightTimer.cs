@@ -5,12 +5,12 @@ using UnityEngine;
 public class NightTimer : MonoBehaviour
 {
     [Header("Tiempo (respaldo)")]
-    [Tooltip("Si el jugador no llega al nivel del jefe, este tiempo largo lo hace aparecer igualmente.")]
+    [Tooltip("Si el jugador no llega a la ronda del jefe, este tiempo largo lo hace aparecer igualmente.")]
     [SerializeField] float duration = 180f;
 
-    [Header("Aparicion por nivel (rondas)")]
-    [Tooltip("Nivel del jugador al que aparece el jefe: cada nivel es una ronda, asi que quien sube mas rapido llega antes.")]
-    [SerializeField, Min(2)] int bossLevel = 18;
+    [Header("Aparicion por ronda")]
+    [Tooltip("Ronda de DifficultyDirector en la que aparece el jefe (su ultima ronda = la mas dificil de la curva). Hay que pelear hasta ahi: la ronda ya no la adelanta el nivel del jugador.")]
+    [SerializeField, Min(2)] int bossRound = 18;
 
     [Header("Jefe")]
     [SerializeField] GameObject bossPrefab;
@@ -30,31 +30,12 @@ public class NightTimer : MonoBehaviour
     public bool BossSpawned { get; private set; }
     public event Action<GameObject> OnBossSpawned;
 
-    public int BossLevel => bossLevel;
-
-    PlayerXP playerXP;
+    public int BossRound => bossRound;
 
     void Start()
     {
         Remaining = duration;
-
-        if (player != null && player.TryGetComponent(out playerXP))
-            playerXP.OnLevelUp += OnLevelUp;
-        else
-            Debug.LogWarning("NightTimer: no se encontro PlayerXP en el jugador; el jefe solo saldra por tiempo.", this);
-
         UpdateLabel();
-    }
-
-    void OnDestroy()
-    {
-        if (playerXP != null) playerXP.OnLevelUp -= OnLevelUp;
-    }
-
-    // Al llegar al nivel del jefe se completa la ultima ronda y aparece.
-    void OnLevelUp(int level)
-    {
-        if (!BossSpawned && level >= bossLevel) SpawnBoss();
     }
 
     void Update()
@@ -64,7 +45,10 @@ public class NightTimer : MonoBehaviour
         Remaining = Mathf.Max(0f, Remaining - Time.deltaTime);
         UpdateLabel();
 
-        if (Remaining <= 0f) SpawnBoss();
+        // La ronda manda (hay que pelear de verdad); el tiempo largo es solo un respaldo si el jugador se estanca.
+        DifficultyDirector director = DifficultyDirector.Instance;
+        bool roundReached = director != null && director.Round >= bossRound;
+        if (roundReached || Remaining <= 0f) SpawnBoss();
     }
 
     [ContextMenu("Probar: aparecer jefe ahora")]
@@ -98,8 +82,9 @@ public class NightTimer : MonoBehaviour
     {
         if (label == null) return;
 
-        // Con rondas por XP el HUD muestra el avance hacia el jefe (nivel actual / nivel del jefe), no una cuenta atras.
-        int level = playerXP != null ? playerXP.Level : 1;
-        label.text = BossSpawned ? "¡LA LLORONA!" : $"RONDA {level}/{bossLevel}";
+        // El HUD muestra el avance por rondas reales (hay que pelear), no por nivel del jugador.
+        DifficultyDirector director = DifficultyDirector.Instance;
+        int round = director != null ? director.Round : 1;
+        label.text = BossSpawned ? "¡LA LLORONA!" : $"RONDA {round}/{bossRound}";
     }
 }

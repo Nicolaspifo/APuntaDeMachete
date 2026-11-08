@@ -71,6 +71,9 @@ public class EnemyContactDamage : MonoBehaviour
     /// <summary>Distancia a la que empieza a cargar el ataque.</summary>
     public void SetRange(float newRange) => range = Mathf.Max(0.2f, newRange);
 
+    /// <summary>Impide empezar nuevos ataques durante unos segundos (el jefe lo usa justo despues de su canto).</summary>
+    public void Hold(float seconds) => nextHitTime = Mathf.Max(nextHitTime, Time.time + seconds);
+
     public float Range => range;
     public float Windup => windup;
     /// <summary>True mientras carga o se recupera: el enemigo no debe moverse.</summary>
