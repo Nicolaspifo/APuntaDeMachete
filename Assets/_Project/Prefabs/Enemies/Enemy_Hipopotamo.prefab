@@ -128,6 +128,9 @@ GameObject:
   - component: {fileID: -5497200916493339669}
   - component: {fileID: -101751274138356924}
   - component: {fileID: 2892628272935405323}
+  - component: {fileID: 5559235772803945322}
+  - component: {fileID: 1029881845598157547}
+  - component: {fileID: 1600235345147027612}
   - component: {fileID: -5284190136171905765}
   m_Layer: 7
   m_Name: Enemy_Hipopotamo
@@ -377,6 +380,63 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
+--- !u!114 &5559235772803945322
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9121166166713209676}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 61b5c3604c682fb48a5b7e2f6840d535, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HitFlash
+  renderers: []
+  flashColor: {r: 1, g: 0.3, b: 0.3, a: 1}
+  flashes: 2
+  flashInterval: 0.07
+  useUnscaledTime: 1
+--- !u!114 &1029881845598157547
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9121166166713209676}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a48548c6aec5c6947975f53b7eeae864, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SfxEmitter
+  playOn: 2
+  clips:
+  - {fileID: 8300000, guid: 4adff1bcb8e9d7240a111a6c472f7e41, type: 3}
+  volume: 1
+  pitchJitter: 0
+  avoidImmediateRepeat: 1
+  ignorePoison: 1
+--- !u!114 &1600235345147027612
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9121166166713209676}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a48548c6aec5c6947975f53b7eeae864, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SfxEmitter
+  playOn: 4
+  clips:
+  - {fileID: 8300000, guid: c351e2f3785c8ab43a8426295f50b500, type: 3}
+  - {fileID: 8300000, guid: 3f7d4933f7d0a444bba7016ae6f903a6, type: 3}
+  - {fileID: 8300000, guid: 7287ed9b1babe784a81af7d76ceceba0, type: 3}
+  volume: 1
+  pitchJitter: 0.05
+  avoidImmediateRepeat: 1
+  ignorePoison: 1
 --- !u!114 &-5284190136171905765
 MonoBehaviour:
   m_ObjectHideFlags: 0

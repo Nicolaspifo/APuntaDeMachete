@@ -6,45 +6,53 @@ public class GameOverFlow : MonoBehaviour
 {
     [SerializeField] Health playerHealth;
     [SerializeField] GameObject panel;
-    [SerializeField] GameObject restartButton;
+    [SerializeField] GameObject restartButton;   // el que queda seleccionado al abrir
+    [SerializeField] GameObject quitButton;
+    [SerializeField] string menuSceneName = "MenuPrincipal";
 
-    void Awake()
-    {
-        if (panel != null) panel.SetActive(false);
-        PauseControl.Reset();
-    }
+    bool isGameOver;
 
-    void OnEnable()
+    void Start()
     {
-        if (playerHealth != null) playerHealth.Died += ShowGameOver;
-        else Debug.LogError("GameOverFlow: falta asignar playerHealth.", this);
-    }
-
-    void OnDisable()
-    {
-        if (playerHealth != null) playerHealth.Died -= ShowGameOver;
+        // En la versión web no se puede cerrar el juego: se oculta el botón.
+        if (quitButton != null && Application.platform == RuntimePlatform.WebGLPlayer)
+            quitButton.SetActive(false);
     }
 
     void Update()
     {
-        if (panel == null || EventSystem.current == null || !panel.activeSelf) return;
+        if (isGameOver || playerHealth == null) return;
 
-        // Si se pierde el foco (clic en vacio con raton), lo devolvemos al boton para no dejar el gamepad sin control.
-        if (EventSystem.current.currentSelectedGameObject == null)
-            EventSystem.current.SetSelectedGameObject(restartButton);
+        if (playerHealth.Current <= 0f) ShowGameOver();
     }
 
     void ShowGameOver()
     {
+        isGameOver = true;
         panel.SetActive(true);
-        PauseControl.Push(this);
+        Time.timeScale = 0f;
         EventSystem.current.SetSelectedGameObject(null);
         EventSystem.current.SetSelectedGameObject(restartButton);
     }
 
     public void Restart()
     {
-        PauseControl.Reset();
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        Time.timeScale = 1f;
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+    public void GoToMenu()
+    {
+        Time.timeScale = 1f;
+        SceneManager.LoadScene(menuSceneName);
+    }
+
+    public void Quit()
+    {
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#else
+        Application.Quit();
+#endif
     }
 }

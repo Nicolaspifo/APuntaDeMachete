@@ -22,6 +22,12 @@ public class PlayerMovement : MonoBehaviour
     /// </summary>
     public Vector2 LastMoveDirection { get; private set; }
 
+    /// <summary>Input de movimiento de este frame (magnitud 0..1). Zero si no hay input.</summary>
+    public Vector2 MoveInput => moveInput;
+
+    /// <summary>True mientras el jugador mantiene una direccion de movimiento.</summary>
+    public bool IsMoving => moveInput.sqrMagnitude > 0.01f;
+
     private float MoveSpeed
     {
         get
