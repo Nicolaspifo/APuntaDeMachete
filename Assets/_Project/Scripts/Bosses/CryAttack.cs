@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
@@ -11,6 +12,9 @@ public class CryAttack : MonoBehaviour
     [SerializeField] float firstCryDelay = 3f;
     [SerializeField] Color warningColor = new Color(1f, 0.2f, 0.2f, 1f);
     [SerializeField] Material lineMaterial;   // opcional
+
+    /// <summary>Se dispara cuando la Llorona empieza a gritar (antes del aviso circular).</summary>
+    public event Action CryStarted;
 
     const int Segments = 48;
 
@@ -56,6 +60,9 @@ public class CryAttack : MonoBehaviour
     {
         crying = true;
         boss.MovementLocked = true;
+
+        CryStarted?.Invoke();
+
         float radius = Pick(radiusPerPhase);
 
         ring.enabled = true;

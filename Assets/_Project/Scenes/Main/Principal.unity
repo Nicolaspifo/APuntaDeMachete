@@ -3760,6 +3760,8 @@ GameObject:
   - component: {fileID: 1567529677}
   - component: {fileID: 1567529678}
   - component: {fileID: 1567529679}
+  - component: {fileID: 1567529681}
+  - component: {fileID: 1567529680}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -4182,6 +4184,46 @@ MonoBehaviour:
   movement: {fileID: 0}
   attack: {fileID: 0}
   axisThreshold: 0.25
+--- !u!114 &1567529680
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1567529661}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a48548c6aec5c6947975f53b7eeae864, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SfxEmitter
+  playOn: 4
+  clips:
+  - {fileID: 8300000, guid: c351e2f3785c8ab43a8426295f50b500, type: 3}
+  - {fileID: 8300000, guid: 3f7d4933f7d0a444bba7016ae6f903a6, type: 3}
+  - {fileID: 8300000, guid: 7287ed9b1babe784a81af7d76ceceba0, type: 3}
+  volume: 1
+  pitchJitter: 0
+  avoidImmediateRepeat: 1
+  ignorePoison: 1
+--- !u!114 &1567529681
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1567529661}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a48548c6aec5c6947975f53b7eeae864, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SfxEmitter
+  playOn: 0
+  clips:
+  - {fileID: 8300000, guid: 570902d8bf698b44aaf1001186b1f7d6, type: 3}
+  volume: 1
+  pitchJitter: 0
+  avoidImmediateRepeat: 1
+  ignorePoison: 1
 --- !u!1 &1574341474
 GameObject:
   m_ObjectHideFlags: 0
