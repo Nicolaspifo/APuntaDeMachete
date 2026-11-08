@@ -34,6 +34,7 @@ public class BossHealthBarUI : MonoBehaviour
         slider.value = 1f;
         tracking = true;
         root.SetActive(true);
+        Debug.Log($"[UI] Barra del jefe mostrada ({bossHealth.Current:0}/{bossHealth.Max:0}).");
     }
 
     void Update()

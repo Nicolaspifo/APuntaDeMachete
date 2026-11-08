@@ -11,15 +11,25 @@ public class EnemyScaling : MonoBehaviour
     [SerializeField, Min(1f)] private float maxSpeedMultiplier = 1.35f;
     [SerializeField] private bool debugLog = false;
 
+    private float extraHp = 1f;
+    private float extraDamage = 1f;
+
+    /// <summary>Refuerzos del jefe: multiplica vida y daño ademas de DifficultyScale. Llamar justo tras Instantiate, antes de Start.</summary>
+    public void SetExtra(float hp, float damage)
+    {
+        extraHp = Mathf.Max(0.1f, hp);
+        extraDamage = Mathf.Max(0.1f, damage);
+    }
+
     private void Start()
     {
         float speed = Mathf.Min(DifficultyScale.Speed, maxSpeedMultiplier);
 
         // SetMax sube el maximo y rellena la vida ganada: el enemigo nace con la vida llena.
         Health health = GetComponent<Health>();
-        health.SetMax(health.Max * DifficultyScale.Hp);
+        health.SetMax(health.Max * DifficultyScale.Hp * extraHp);
 
-        if (TryGetComponent(out EnemyContactDamage contact)) contact.DamageMultiplier = DifficultyScale.Damage;
+        if (TryGetComponent(out EnemyContactDamage contact)) contact.DamageMultiplier = DifficultyScale.Damage * extraDamage;
         if (TryGetComponent(out EnemyChase chase)) chase.SpeedMultiplier = speed;
 
         if (debugLog)

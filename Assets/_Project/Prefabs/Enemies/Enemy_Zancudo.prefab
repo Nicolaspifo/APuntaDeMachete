@@ -158,15 +158,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ac3bbd6c1de9504ea4eca912481743b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyContactDamage
-  damage: 5
+  damage: 6.05
   range: 1.41
   cooldown: 1
   windup: 0.25
   recover: 0.3
   damageRadiusScale: 0.9
   lungeDistance: 1.5
-  lungeTime: 0.12
-  lungeHitRadius: 1
+  lungeTime: 0.11
+  lungeHitRadius: 1.2
   aimLockFraction: 0.6
   leadFactor: 0.7
   maxConcurrentAttackers: 3
