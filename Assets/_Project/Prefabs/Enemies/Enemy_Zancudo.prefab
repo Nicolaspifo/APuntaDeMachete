@@ -21,6 +21,8 @@ GameObject:
   - component: {fileID: 7713763494929299385}
   - component: {fileID: 3570074011232890589}
   - component: {fileID: -2720629618376870074}
+  - component: {fileID: -1009876587309619728}
+  - component: {fileID: 1499599928906898646}
   m_Layer: 7
   m_Name: Enemy_Zancudo
   m_TagString: Untagged
@@ -180,6 +182,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fc6fbb788d7df6f4abd08060cd677664, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyDeath
+  destroyDelay: 0.8
 --- !u!50 &5639814698552646239
 Rigidbody2D:
   serializedVersion: 5
@@ -338,8 +341,47 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7011dd9c1398b9d418f9e9dba20c9cbc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyScaling
-  maxSpeedMultiplier: 1.2
+  maxSpeedMultiplier: 1.35
   debugLog: 0
+--- !u!95 &-1009876587309619728
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6203631419841849656}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: a777e5762f168d640902d2b5936fb70a, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &1499599928906898646
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6203631419841849656}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9861fd98a3e8f5f42acd48f4c2323f30, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyAnimator
+  contact: {fileID: 0}
+  health: {fileID: 0}
+  axisDeadZone: 0.25
+  walkThreshold: 0.3
+  walkHold: 0.1
 --- !u!1 &8452636756499402141
 GameObject:
   m_ObjectHideFlags: 0
