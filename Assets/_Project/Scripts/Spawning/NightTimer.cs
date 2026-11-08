@@ -15,7 +15,7 @@ public class NightTimer : MonoBehaviour
     [SerializeField] Transform spawnPoint;
 
     [Header("Al aparecer el jefe")]
-    [Tooltip("Scripts a apagar, por ejemplo el spawner de enemigos normales")]
+    [Tooltip("Scripts a apagar, por ejemplo el EnemySpawner")]
     [SerializeField] Behaviour[] disableWhenBossAppears;
 
     [Header("UI (opcional)")]
