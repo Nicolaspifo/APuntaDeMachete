@@ -91,7 +91,7 @@ public class RunMetrics : MonoBehaviour
         string first = firstLevelTime >= 0f ? $"{firstLevelTime:0}s" : "-";
 
         DifficultyDirector director = DifficultyDirector.Instance;
-        string round = director != null ? $"ronda {director.Round} | " : "";
+        string round = director != null ? $"ronda {director.Round}/{director.MaxRound} (kills {director.RoundKillCount}/{director.KillsPerRound}) | " : "";
         string difficulty = $"{round}vida x{DifficultyScale.Hp:0.0} dmg x{DifficultyScale.Damage:0.0} vel x{DifficultyScale.Speed:0.00}";
 
         Debug.Log($"[Run {minutes:00}:{seconds:00}] nivel {level} (1er nivel a {first}) | kills {kills} | vivos {alive} | vida {hp} | daño recibido {damageTaken:0} | velocidad {speed} | enemigos: {difficulty}", this);

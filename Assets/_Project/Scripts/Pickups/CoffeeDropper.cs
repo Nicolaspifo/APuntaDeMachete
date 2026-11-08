@@ -7,6 +7,8 @@ public class CoffeeDropper : MonoBehaviour
     [SerializeField, Min(1)] private int minDrops = 1;
     [SerializeField, Min(1)] private int maxDrops = 3;
     [SerializeField, Min(0f)] private float scatterRadius = 0.5f;
+    [Tooltip("Si esta activo, suelta 1 grano cada vez que le aciertan, ademas de los de la muerte. Para el jefe: premia la agresividad.")]
+    [SerializeField] private bool dropOnHit = false;
 
     private Health health;
 
@@ -14,18 +16,28 @@ public class CoffeeDropper : MonoBehaviour
     {
         health = GetComponent<Health>();
         health.Died += DropCoffee;
+        if (dropOnHit) health.Damaged += DropOnHit;
     }
 
     private void OnDestroy()
     {
-        if (health != null) health.Died -= DropCoffee;
+        if (health != null)
+        {
+            health.Died -= DropCoffee;
+            health.Damaged -= DropOnHit;
+        }
     }
 
-    private void DropCoffee()
+    private void DropOnHit(float current, float max)
+    {
+        if (current > 0f) SpawnBeans(1);   // el golpe final no suma: lo cubren los granos de la muerte
+    }
+
+    private void DropCoffee() => SpawnBeans(Random.Range(minDrops, maxDrops + 1));
+
+    private void SpawnBeans(int amount)
     {
         if (coffeeBeanPrefab == null) return;
-
-        int amount = Random.Range(minDrops, maxDrops + 1);
 
         for (int i = 0; i < amount; i++)
         {

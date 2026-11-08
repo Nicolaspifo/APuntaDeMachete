@@ -2,9 +2,12 @@ using System;
 using UnityEngine;
 
 /// <summary>
-/// Curva de dificultad por RONDAS. Una ronda es un nivel del jugador: al subir de nivel (por XP) pasa a la
-/// siguiente ronda y los enemigos se endurecen; quien sube rapido llega antes al boss. Por si un jugador se
-/// estanca, el tiempo tambien empuja (una ronda extra cada <see cref="secondsPerRoundFallback"/> segundos).
+/// Curva de dificultad por RONDAS, desacoplada del nivel del jugador. Cada ronda exige matar una cuota de
+/// enemigos (<see cref="killsPerRound"/>) antes de pasar a la siguiente, asi que hay que pelear de verdad contra
+/// la configuracion de esa ronda; el nivel/XP sigue gobernando las cartas de mejora, pero ya no adelanta la ronda
+/// por si solo (antes un jugador agresivo subia de nivel y la ronda saltaba con el, sin vivirla). Por si un
+/// jugador se estanca sin matar lo suficiente, el tiempo tambien empuja (una ronda extra cada
+/// <see cref="secondsPerRoundFallback"/> segundos). La ronda nunca avanza mas de 1 a la vez.
 ///
 /// Cada frame evalua la curva (interpolacion lineal entre puntos) y escribe en <see cref="DifficultyScale"/> los
 /// multiplicadores de vida, dano y velocidad de los enemigos, y expone el ritmo del spawner.
@@ -15,7 +18,7 @@ public class DifficultyDirector : MonoBehaviour
     [Serializable]
     public struct Point
     {
-        [Tooltip("Ronda (= nivel del jugador) en la que se alcanzan estos valores.")]
+        [Tooltip("Ronda en la que se alcanzan estos valores.")]
         public float round;
         [Tooltip("Segundos entre tandas de enemigos.")]
         public float spawnInterval;
@@ -36,8 +39,8 @@ public class DifficultyDirector : MonoBehaviour
         }
     }
 
-    // El jefe aparece al nivel 18 (NightTimer.bossLevel); la curva termina ahi. Despues del ultimo punto se
-    // mantienen los valores. Ver docs/10 - Rondas, boss y puntaje.
+    // El jefe aparece al llegar a la ultima ronda de esta curva (NightTimer.bossRound, hoy 18). Despues del
+    // ultimo punto se mantienen los valores. Ver docs/10 - Rondas, boss y puntaje.
     [SerializeField] private Point[] curve =
     {
         new Point(1f,  2.5f, 10, 1.0f, 1.0f, 1.00f),  // calentamiento
@@ -47,7 +50,10 @@ public class DifficultyDirector : MonoBehaviour
         new Point(18f, 0.7f, 26, 2.4f, 1.2f, 1.35f),  // ronda del boss
     };
 
-    [Tooltip("Respaldo por tiempo: cada tantos segundos cuenta como una ronda extra aunque no se suba de nivel.")]
+    [Tooltip("Kills necesarios dentro de una ronda para pasar a la siguiente: hay que pelear, no solo subir de nivel.")]
+    [SerializeField, Min(1)] private int killsPerRound = 10;
+
+    [Tooltip("Respaldo por tiempo: si se supera ronda x este valor en segundos, la ronda avanza igual aunque falten kills.")]
     [SerializeField, Min(5f)] private float secondsPerRoundFallback = 40f;
 
     [Header("Depuracion")]
@@ -57,56 +63,79 @@ public class DifficultyDirector : MonoBehaviour
 
     /// <summary>Segundos jugados. Usa Time.deltaTime: la pausa de las cartas no cuenta.</summary>
     public float Elapsed { get; private set; }
-    /// <summary>Progreso fraccionario sobre el que se evalua la curva: max(nivel del jugador, 1 + tiempo / respaldo).</summary>
+    /// <summary>Progreso fraccionario sobre el que se evalua la curva: ronda + avance hacia la cuota de kills.</summary>
     public float Progress { get; private set; } = 1f;
     /// <summary>Ronda actual (numero entero).</summary>
     public int Round { get; private set; } = 1;
+    /// <summary>Ronda mas alta de la curva: la del jefe.</summary>
+    public int MaxRound { get; private set; } = 1;
+    /// <summary>Kills acumulados en la ronda actual.</summary>
+    public int RoundKillCount { get; private set; }
+    public int KillsPerRound => killsPerRound;
     public float SpawnInterval { get; private set; } = 3f;
     public int MaxAlive { get; private set; } = 20;
 
     /// <summary>Se dispara al pasar a una ronda mayor. Parametro: la nueva ronda.</summary>
     public event Action<int> RoundChanged;
 
-    private PlayerXP playerXP;
     private float nextLog;
+    private int lastAdvanceFrame = -1;
 
     private void OnEnable()
     {
         Instance = this;
         Elapsed = 0f;
         Round = 1;
+        RoundKillCount = 0;
         Progress = 1f;
+        MaxRound = curve != null && curve.Length > 0 ? Mathf.Max(1, Mathf.RoundToInt(curve[curve.Length - 1].round)) : 1;
         Evaluate(1f);
+
+        GameEvents.EnemyKilled += OnEnemyKilled;
     }
 
     private void OnDisable()
     {
+        GameEvents.EnemyKilled -= OnEnemyKilled;
         if (Instance == this) Instance = null;
         DifficultyScale.Hp = DifficultyScale.Damage = DifficultyScale.Speed = 1f;
+    }
+
+    // Cada kill cuenta para la cuota de la ronda actual: asi hay que pelear de verdad, no solo subir de nivel.
+    private void OnEnemyKilled(GameObject enemy)
+    {
+        if (Round >= MaxRound) return;
+
+        RoundKillCount++;
+        if (RoundKillCount >= killsPerRound) AdvanceRound();
     }
 
     private void Update()
     {
         Elapsed += Time.deltaTime;
 
-        if (playerXP == null) playerXP = FindAnyObjectByType<PlayerXP>();
-        int level = playerXP != null ? playerXP.Level : 1;
+        // Respaldo por tiempo: si el jugador se estanca sin cumplir la cuota de kills, la ronda avanza igual.
+        if (Round < MaxRound && Elapsed >= Round * secondsPerRoundFallback) AdvanceRound();
 
-        Progress = Mathf.Max(level, 1f + Elapsed / secondsPerRoundFallback);
+        Progress = Round + (Round < MaxRound ? Mathf.Clamp01(RoundKillCount / (float)killsPerRound) : 0f);
         Evaluate(Progress);
-
-        int round = Mathf.FloorToInt(Progress);
-        if (round > Round)
-        {
-            Round = round;
-            RoundChanged?.Invoke(Round);
-        }
 
         if (debugLog && Elapsed >= nextLog)
         {
             nextLog = Elapsed + 15f;
-            Debug.Log($"[Director {Elapsed:0}s] ronda {Round} | intervalo {SpawnInterval:0.00} | maxVivos {MaxAlive} | vida x{DifficultyScale.Hp:0.00} | dano x{DifficultyScale.Damage:0.00} | velocidad x{DifficultyScale.Speed:0.00}", this);
+            Debug.Log($"[Director {Elapsed:0}s] ronda {Round}/{MaxRound} | kills {RoundKillCount}/{killsPerRound} | intervalo {SpawnInterval:0.00} | maxVivos {MaxAlive} | vida x{DifficultyScale.Hp:0.00} | dano x{DifficultyScale.Damage:0.00} | velocidad x{DifficultyScale.Speed:0.00}", this);
         }
+    }
+
+    // Nunca avanza mas de 1 ronda por frame, aunque el evento de kill y el respaldo por tiempo coincidan.
+    private void AdvanceRound()
+    {
+        if (Time.frameCount == lastAdvanceFrame) return;
+        lastAdvanceFrame = Time.frameCount;
+
+        Round = Mathf.Min(Round + 1, MaxRound);
+        RoundKillCount = 0;
+        RoundChanged?.Invoke(Round);
     }
 
     private void Evaluate(float progress)

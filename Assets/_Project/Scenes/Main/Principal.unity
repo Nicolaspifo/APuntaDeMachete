@@ -7260,7 +7260,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NightTimer
   duration: 600
-  bossLevel: 18
+  bossRound: 18
   bossPrefab: {fileID: 536165718639125960, guid: 50cab15091f87be4591166397648d2d8, type: 3}
   player: {fileID: 1567529663}
   spawnDistance: 8

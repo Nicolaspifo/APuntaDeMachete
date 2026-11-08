@@ -22,6 +22,7 @@ GameObject:
   - component: {fileID: 7393888355405980606}
   - component: {fileID: -2087920910820921698}
   - component: {fileID: 7100000000000000001}
+  - component: {fileID: 7100000000000000002}
   m_Layer: 7
   m_Name: Llorona
   m_TagString: Untagged
@@ -116,7 +117,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1006f460344ff7c45a54d138ab0b6b35, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Health
-  maxHealth: 1500
+  maxHealth: 1000
   invulnerabilitySeconds: 0
 --- !u!114 &-7503720224500984395
 MonoBehaviour:
@@ -297,29 +298,32 @@ MonoBehaviour:
   - interval: 9
     entries: []
   - interval: 8
+    maxWaves: 3
     entries:
     - prefab: {fileID: 6203631419841849656, guid: 5c576f40662f18a4abdb410c8112a95c, type: 3}
-      count: 4
-      hpMultiplier: 2
+      count: 2
+      hpMultiplier: 4
       damageMultiplier: 1.3
   - interval: 9
+    maxWaves: 2
     entries:
-    - prefab: {fileID: 9121166166713209676, guid: b201dc8c1b129a74a9ffad795b879bad, type: 3}
-      count: 2
-      hpMultiplier: 2
-      damageMultiplier: 1.3
-  - interval: 7
-    entries:
-    - prefab: {fileID: 6203631419841849656, guid: 5c576f40662f18a4abdb410c8112a95c, type: 3}
-      count: 2
-      hpMultiplier: 3
-      damageMultiplier: 1.6
     - prefab: {fileID: 9121166166713209676, guid: b201dc8c1b129a74a9ffad795b879bad, type: 3}
       count: 1
-      hpMultiplier: 3
-      damageMultiplier: 1.6
+      hpMultiplier: 4
+      damageMultiplier: 1.3
+  - interval: 10
+    maxWaves: 2
+    entries:
+    - prefab: {fileID: 6203631419841849656, guid: 5c576f40662f18a4abdb410c8112a95c, type: 3}
+      count: 1
+      hpMultiplier: 4.5
+      damageMultiplier: 1.8
+    - prefab: {fileID: 9121166166713209676, guid: b201dc8c1b129a74a9ffad795b879bad, type: 3}
+      count: 1
+      hpMultiplier: 4.5
+      damageMultiplier: 1.8
   spawnRadius: 3
-  maxAlive: 10
+  maxAlive: 4
   firstDelay: 4
   killSummonsOnDeath: 1
 --- !u!114 &-4365740493875044433
@@ -404,3 +408,20 @@ MonoBehaviour:
   ringMargin: 1.2
   scatter: 4
   warningColor: {r: 1, g: 0.1, b: 0.2, a: 0.55}
+--- !u!114 &7100000000000000002
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 536165718639125960}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a3c0fe70283218f4aac7fdd040260dd0, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::CoffeeDropper
+  coffeeBeanPrefab: {fileID: 5473035411711741365, guid: bddbb5f9a520ab84baf4794dd88f5e3f, type: 3}
+  minDrops: 1
+  maxDrops: 3
+  scatterRadius: 0.5
+  dropOnHit: 1

@@ -17,6 +17,7 @@ public class EnemyDeath : MonoBehaviour
     {
         if (dying) return;
         dying = true;
+        GameEvents.RaiseEnemyKilled(gameObject); // avisa a quien escuche (medidor, puntaje, jefe...)
 
         // Deja de perseguir y de atacar. Al apagarse, ambos liberan su casilla del anillo y su ficha de ataque.
         if (TryGetComponent(out EnemyChase chase)) chase.enabled = false;
