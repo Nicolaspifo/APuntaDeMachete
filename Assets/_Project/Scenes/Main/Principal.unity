@@ -263,7 +263,7 @@ RectTransform:
   m_Father: {fileID: 1834019206}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 1}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 10, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -280,19 +280,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 0.97351444, b: 0, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
-  m_Type: 1
+  m_Sprite: {fileID: -6901181535044133625, guid: 8d9b54a5b0d0d9449b417fbb75f8cf42, type: 3}
+  m_Type: 3
   m_PreserveAspect: 0
   m_FillCenter: 1
-  m_FillMethod: 4
-  m_FillAmount: 1
+  m_FillMethod: 0
+  m_FillAmount: 0
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
@@ -1169,6 +1169,7 @@ MonoBehaviour:
   minDrops: 6
   maxDrops: 8
   scatterRadius: 0.5
+  dropOnHit: 0
 --- !u!114 &272478697
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2247,7 +2248,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 52.7, y: -166.6}
+  m_AnchoredPosition: {x: 52.69995, y: -166.59998}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &427452245
@@ -4106,8 +4107,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
-  m_Type: 1
+  m_Sprite: {fileID: -6901181535044133625, guid: 8d9b54a5b0d0d9449b417fbb75f8cf42, type: 3}
+  m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -6210,7 +6211,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!212 &1459681856
 SpriteRenderer:
   serializedVersion: 3
@@ -6320,8 +6321,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 20, y: 0}
+  m_AnchoredPosition: {x: -0.000015258789, y: 1.3000002}
+  m_SizeDelta: {x: 50, y: 13.970947}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1525736833
 MonoBehaviour:
@@ -6343,7 +6344,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
+  m_Sprite: {fileID: 8534846423524515484, guid: d825d11626bfa844097f23ad088ec994, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -7603,6 +7604,7 @@ MonoBehaviour:
     hp: 2.4
     damage: 1.2
     speed: 1.35
+  killsPerRound: 10
   secondsPerRoundFallback: 40
   debugLog: 1
 --- !u!4 &1775845449
@@ -8285,6 +8287,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1897512397}
   - component: {fileID: 1897512398}
+  - component: {fileID: 1897512399}
   m_Layer: 5
   m_Name: VolumeSlider
   m_TagString: Untagged
@@ -8365,6 +8368,22 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &1897512399
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1897512396}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d064f854d4de4064b90f62c07b65f056, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SliderHandlePulse
+  handle: {fileID: 1379039117}
+  scaleMultiplier: 1.15
+  animationSpeed: 1
+  transitionSpeed: 8
 --- !u!1 &1927566212
 GameObject:
   m_ObjectHideFlags: 0
