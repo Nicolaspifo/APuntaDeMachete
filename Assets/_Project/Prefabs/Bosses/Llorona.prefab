@@ -18,6 +18,9 @@ GameObject:
   - component: {fileID: 441476644152069374}
   - component: {fileID: 1727507143954541594}
   - component: {fileID: -4192371878938718034}
+  - component: {fileID: -4365740493875044433}
+  - component: {fileID: 7393888355405980606}
+  - component: {fileID: -2087920910820921698}
   m_Layer: 7
   m_Name: Llorona
   m_TagString: Untagged
@@ -144,6 +147,11 @@ MonoBehaviour:
   windup: 0.3
   recover: 0.3
   damageRadiusScale: 0.9
+  lungeDistance: 1.5
+  lungeTime: 0.12
+  lungeHitRadius: 1
+  aimLockFraction: 0.6
+  leadFactor: 0.7
   maxConcurrentAttackers: 3
 --- !u!50 &5541990169841649194
 Rigidbody2D:
@@ -296,3 +304,62 @@ MonoBehaviour:
   maxAlive: 25
   firstDelay: 4
   killSummonsOnDeath: 0
+--- !u!114 &-4365740493875044433
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 536165718639125960}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a48548c6aec5c6947975f53b7eeae864, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SfxEmitter
+  playOn: 1
+  clips:
+  - {fileID: 8300000, guid: e61a4f3909123904fa6dea66e2276092, type: 3}
+  volume: 1
+  pitchJitter: 0
+  avoidImmediateRepeat: 1
+  ignorePoison: 1
+--- !u!114 &7393888355405980606
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 536165718639125960}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a48548c6aec5c6947975f53b7eeae864, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SfxEmitter
+  playOn: 4
+  clips:
+  - {fileID: 8300000, guid: c351e2f3785c8ab43a8426295f50b500, type: 3}
+  - {fileID: 8300000, guid: 3f7d4933f7d0a444bba7016ae6f903a6, type: 3}
+  - {fileID: 8300000, guid: 7287ed9b1babe784a81af7d76ceceba0, type: 3}
+  volume: 1
+  pitchJitter: 0
+  avoidImmediateRepeat: 1
+  ignorePoison: 1
+--- !u!114 &-2087920910820921698
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 536165718639125960}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a48548c6aec5c6947975f53b7eeae864, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SfxEmitter
+  playOn: 5
+  clips:
+  - {fileID: 8300000, guid: e5190fb60e0674a40a6f57ed1895b767, type: 3}
+  volume: 1
+  pitchJitter: 0
+  avoidImmediateRepeat: 1
+  ignorePoison: 1
