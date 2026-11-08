@@ -117,7 +117,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1006f460344ff7c45a54d138ab0b6b35, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Health
-  maxHealth: 1000
+  maxHealth: 1300
   invulnerabilitySeconds: 0
 --- !u!114 &-7503720224500984395
 MonoBehaviour:
@@ -143,7 +143,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ac3bbd6c1de9504ea4eca912481743b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyContactDamage
-  damage: 15
+  damage: 11
   range: 3
   cooldown: 3.5
   windup: 0.6

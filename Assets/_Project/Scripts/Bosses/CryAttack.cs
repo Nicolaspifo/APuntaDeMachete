@@ -10,7 +10,7 @@ public class CryAttack : MonoBehaviour
     [Tooltip("Segundos de aviso del aro por fase: menos tiempo = ataque mas rapido y mas dificil de esquivar.")]
     [SerializeField] float[] warningTimePerPhase = { 0.8f, 0.7f, 0.6f, 0.5f };
     [Tooltip("Daño del aro como fraccion de la vida maxima del jugador (0.3 = 30 %). El aturdimiento lo dan las casillas del suelo.")]
-    [SerializeField, Range(0f, 1f)] float ringDamagePercent = 0.25f;
+    [SerializeField, Range(0f, 1f)] float ringDamagePercent = 0.18f;
     [SerializeField] float firstCryDelay = 3f;
     [Tooltip("Segundos despues del canto en los que el jefe NO empieza ataques (embestidas): tras gritar, respira.")]
     [SerializeField, Min(0f)] float attackHoldAfterCry = 2.5f;

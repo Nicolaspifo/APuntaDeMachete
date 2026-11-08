@@ -32,6 +32,8 @@ public class NightTimer : MonoBehaviour
 
     public int BossRound => bossRound;
 
+    bool stoppedSpawning;
+
     void Start()
     {
         Remaining = duration;
@@ -48,7 +50,21 @@ public class NightTimer : MonoBehaviour
         // La ronda manda (hay que pelear de verdad); el tiempo largo es solo un respaldo si el jugador se estanca.
         DifficultyDirector director = DifficultyDirector.Instance;
         bool roundReached = director != null && director.Round >= bossRound;
-        if (roundReached || Remaining <= 0f) SpawnBoss();
+
+        // Al llegar a la ultima ronda se deja de invocar mas enemigos: el jefe no aparece hasta terminarte a los
+        // que ya estan en el campo (asi no se "regalan" enemigos sin matar al pasar al jefe).
+        if (roundReached && !stoppedSpawning)
+        {
+            stoppedSpawning = true;
+            foreach (var b in disableWhenBossAppears)
+                if (b != null) b.enabled = false;
+
+            EnemySpawner spawner = FindAnyObjectByType<EnemySpawner>();
+            if (spawner != null) spawner.enabled = false;
+        }
+
+        bool fieldClear = stoppedSpawning && FindAnyObjectByType<EnemyChase>() == null;
+        if ((roundReached && fieldClear) || Remaining <= 0f) SpawnBoss();
     }
 
     [ContextMenu("Probar: aparecer jefe ahora")]
