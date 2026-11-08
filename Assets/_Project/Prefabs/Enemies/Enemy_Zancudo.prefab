@@ -18,6 +18,8 @@ GameObject:
   - component: {fileID: 8362326296720523940}
   - component: {fileID: 5460589273208176834}
   - component: {fileID: 3993559637851218977}
+  - component: {fileID: 7713763494929299385}
+  - component: {fileID: 3570074011232890589}
   m_Layer: 7
   m_Name: Enemy_Zancudo
   m_TagString: Untagged
@@ -278,6 +280,46 @@ MonoBehaviour:
   flashes: 2
   flashInterval: 0.07
   useUnscaledTime: 1
+--- !u!114 &7713763494929299385
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6203631419841849656}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a48548c6aec5c6947975f53b7eeae864, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SfxEmitter
+  playOn: 2
+  clips:
+  - {fileID: 8300000, guid: 321c417437b23e3418dd82e167d9a0da, type: 3}
+  volume: 1
+  pitchJitter: 0
+  avoidImmediateRepeat: 1
+  ignorePoison: 1
+--- !u!114 &3570074011232890589
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6203631419841849656}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a48548c6aec5c6947975f53b7eeae864, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SfxEmitter
+  playOn: 4
+  clips:
+  - {fileID: 8300000, guid: c351e2f3785c8ab43a8426295f50b500, type: 3}
+  - {fileID: 8300000, guid: 3f7d4933f7d0a444bba7016ae6f903a6, type: 3}
+  - {fileID: 8300000, guid: 7287ed9b1babe784a81af7d76ceceba0, type: 3}
+  volume: 1
+  pitchJitter: 0.05
+  avoidImmediateRepeat: 1
+  ignorePoison: 1
 --- !u!1 &8452636756499402141
 GameObject:
   m_ObjectHideFlags: 0
