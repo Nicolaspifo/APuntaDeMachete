@@ -8,6 +8,8 @@ public class EnemySpawner : MonoBehaviour
     {
         public GameObject prefab;
         [Min(0f)] public float weight = 1f;
+        [Tooltip("Segundo de la partida desde el que puede salir (usa el DifficultyDirector). 0 = desde el inicio.")]
+        [Min(0f)] public float unlockSeconds = 0f;
     }
 
     [Header("Enemigos")]
@@ -46,13 +48,17 @@ public class EnemySpawner : MonoBehaviour
         timer += Time.deltaTime;
         elapsed += Time.deltaTime;
 
-        if (timer >= currentInterval)
+        // Con director, el ritmo sale de su curva; sin el, se usa el intervalo que baja solo.
+        DifficultyDirector director = DifficultyDirector.Instance;
+        float interval = director != null ? director.SpawnInterval : currentInterval;
+
+        if (timer >= interval)
         {
             SpawnEnemies();
             timer = 0f;
         }
 
-        if (elapsed >= 1f)
+        if (director == null && elapsed >= 1f)
         {
             currentInterval = Mathf.Max(
                 minInterval,
@@ -67,9 +73,12 @@ public class EnemySpawner : MonoBehaviour
         // Limpia enemigos que ya fueron destruidos.
         alive.RemoveAll(enemy => enemy == null);
 
+        DifficultyDirector director = DifficultyDirector.Instance;
+        int limit = director != null ? director.MaxAlive : maxAlive;
+
         for (int i = 0; i < enemiesPerSpawn; i++)
         {
-            if (alive.Count >= maxAlive) return;
+            if (alive.Count >= limit) return;
 
             GameObject prefab = PickRandomPrefab();
             if (prefab == null) continue;
@@ -83,14 +92,22 @@ public class EnemySpawner : MonoBehaviour
         }
     }
 
+    // Valido si tiene prefab y peso y, con director, si ya paso su segundo de desbloqueo.
+    private static bool IsSpawnable(EnemyEntry entry)
+    {
+        if (entry == null || entry.prefab == null || entry.weight <= 0f) return false;
+
+        DifficultyDirector director = DifficultyDirector.Instance;
+        return director == null || director.Elapsed >= entry.unlockSeconds;
+    }
+
     private GameObject PickRandomPrefab()
     {
         float totalWeight = 0f;
 
         foreach (EnemyEntry entry in enemies)
         {
-            if (entry == null || entry.prefab == null || entry.weight <= 0f)
-                continue;
+            if (!IsSpawnable(entry)) continue;
 
             totalWeight += entry.weight;
         }
@@ -101,8 +118,7 @@ public class EnemySpawner : MonoBehaviour
 
         foreach (EnemyEntry entry in enemies)
         {
-            if (entry == null || entry.prefab == null || entry.weight <= 0f)
-                continue;
+            if (!IsSpawnable(entry)) continue;
 
             roll -= entry.weight;
 

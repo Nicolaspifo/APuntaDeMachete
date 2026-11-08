@@ -9,5 +9,10 @@ public class EnemyDeath : MonoBehaviour
     private void OnEnable() => health.Died += HandleDeath;
     private void OnDisable() => health.Died -= HandleDeath;
 
-    private void HandleDeath() => Destroy(gameObject);
+    private void HandleDeath()
+    {
+        GameEvents.RaiseEnemyKilled(gameObject); // avisa a quien escuche (medidor, HUD, boss...)
+        Destroy(gameObject);
+    }
+
 }

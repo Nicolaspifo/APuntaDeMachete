@@ -5,6 +5,13 @@ public class PlayerXP : MonoBehaviour
     [SerializeField] int baseXpToLevel = 5;
     [SerializeField] int xpIncreasePerLevel = 3;
 
+    [Tooltip("Al subir de nivel cura esta fraccion de la vida maxima (0.1 = 10%). 0 = desactivado.")]
+    [SerializeField, Range(0f, 0.5f)] float healPercentOnLevelUp = 0.1f;
+
+    Health health;
+
+    void Awake() => TryGetComponent(out health);
+
     public int Level { get; private set; } = 1;
     public int CurrentXP { get; private set; } 
     public int XpToNextLevel => baseXpToLevel + (Level - 1) * xpIncreasePerLevel;
@@ -21,6 +28,7 @@ public class PlayerXP : MonoBehaviour
         {
             CurrentXP -= XpToNextLevel;
             Level++;
+            if (health != null && healPercentOnLevelUp > 0f) health.Heal(health.Max * healPercentOnLevelUp);
             OnLevelUp?.Invoke(Level);
         }
         OnXPChanged?.Invoke(CurrentXP, XpToNextLevel, Level);

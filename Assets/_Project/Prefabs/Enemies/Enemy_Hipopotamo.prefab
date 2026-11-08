@@ -131,6 +131,7 @@ GameObject:
   - component: {fileID: 5559235772803945322}
   - component: {fileID: 1029881845598157547}
   - component: {fileID: 1600235345147027612}
+  - component: {fileID: -5284190136171905765}
   m_Layer: 7
   m_Name: Enemy_Hipopotamo
   m_TagString: Untagged
@@ -240,7 +241,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f3b6888cd4e8f024cb754af8612eb49e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyChase
-  speed: 2.32
+  speed: 2.9
   stopDistance: 2
   flank: 1
   maxInnerSlots: 5
@@ -269,9 +270,14 @@ MonoBehaviour:
   damage: 12.1
   range: 2.23
   cooldown: 2
-  windup: 0.64
+  windup: 0.58
   recover: 0.6
   damageRadiusScale: 0.9
+  lungeDistance: 4
+  lungeTime: 0.22
+  lungeHitRadius: 1.4
+  aimLockFraction: 0.75
+  leadFactor: 0.9
   maxConcurrentAttackers: 3
 --- !u!114 &1944943770654409028
 MonoBehaviour:
@@ -431,3 +437,17 @@ MonoBehaviour:
   pitchJitter: 0.05
   avoidImmediateRepeat: 1
   ignorePoison: 1
+--- !u!114 &-5284190136171905765
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9121166166713209676}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7011dd9c1398b9d418f9e9dba20c9cbc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyScaling
+  maxSpeedMultiplier: 1.2
+  debugLog: 0
