@@ -11,6 +11,11 @@ public class PlayerRuntimeStats : MonoBehaviour
     [SerializeField] private UpgradeData testUpgrade;
     [SerializeField, Min(0f)] private float basePoisonDuration = 3f;
 
+    [Header("Topes")]
+    [Tooltip("Velocidad maxima como multiplo de la base. 1.35 = como mucho +35% aunque haya muchas mejoras.")]
+    [SerializeField, Min(1f)] private float maxMoveSpeedMultiplier = 1.35f;
+
+
     private readonly List<UpgradeData> upgrades = new();
     private readonly Dictionary<StatType, float> baseValues = new();
     private readonly Dictionary<StatType, float> current = new();
@@ -56,12 +61,18 @@ public class PlayerRuntimeStats : MonoBehaviour
         return count;
     }
 
+    // Las cartas de relleno (solo curan) se pueden repetir sin limite; las normales respetan maxStacks.
     public bool CanApply(UpgradeData upgrade) =>
-        upgrade != null && CountOf(upgrade) < upgrade.MaxStacks;
+        upgrade != null && (upgrade.IsConsumable || CountOf(upgrade) < upgrade.MaxStacks);
 
     public bool Apply(UpgradeData upgrade)
     {
         if (!CanApply(upgrade)) return false;
+
+        if (upgrade.HealPercent > 0f) health.Heal(health.Max * upgrade.HealPercent);
+
+        // Una carta de relleno no cambia stats: no se guarda en la lista de mejoras.
+        if (upgrade.IsConsumable) return true;
 
         upgrades.Add(upgrade);
         Recalculate();
@@ -84,6 +95,10 @@ public class PlayerRuntimeStats : MonoBehaviour
             }
 
             current[pair.Key] = (pair.Value + add) * multiply;
+
+            if (pair.Key == StatType.MoveSpeed)
+            current[pair.Key] = Mathf.Min(current[pair.Key], pair.Value * maxMoveSpeedMultiplier);
+
         }
 
         machete.Damage = Get(StatType.Damage);
@@ -99,7 +114,7 @@ public class PlayerRuntimeStats : MonoBehaviour
     {
         bool applied = Apply(testUpgrade);
         Debug.Log(applied
-            ? $"{testUpgrade.DisplayName}: daño {Get(StatType.Damage)}, cooldown {Get(StatType.AttackCooldown)}, vida {Get(StatType.MaxHealth)}"
+            ? $"{testUpgrade.DisplayName}: daño {Get(StatType.Damage)}, cooldown {Get(StatType.AttackCooldown)}, vida {Get(StatType.MaxHealth)}, velocidad x{MoveSpeedMultiplier:0.00}"
             : "No se pudo aplicar: falta la mejora o llegó al máximo");
     }
 }

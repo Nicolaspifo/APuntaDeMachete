@@ -11,6 +11,8 @@ public class UpgradeCardsUI : MonoBehaviour
     [SerializeField] GameObject panel;
     [SerializeField] UpgradeCardView[] cards;
     [SerializeField] List<UpgradeData> pool;
+    [Tooltip("Cartas de relleno (solo curan, sin limite de usos). Salen cuando se agotan las normales o rellenan huecos.")]
+    [SerializeField] List<UpgradeData> fallbackPool;
     [SerializeField] float inputDelay = 0.4f;
 
     public event System.Action<UpgradeData> OnUpgradeChosen;
@@ -19,6 +21,11 @@ public class UpgradeCardsUI : MonoBehaviour
     bool isOpen;
 
     bool IsAvailable(UpgradeData u) => stats == null || stats.CanApply(u);
+
+    // Hay algo que ofrecer si queda una carta normal o una de relleno.
+    bool HasOptions() =>
+        (pool != null && pool.Exists(IsAvailable)) ||
+        (fallbackPool != null && fallbackPool.Exists(IsAvailable));
 
     void OnEnable()
     {
@@ -35,7 +42,7 @@ public class UpgradeCardsUI : MonoBehaviour
     void HandleLevelUp(int level)
     {
         if (playerHealth != null && playerHealth.IsDead) return;
-        if (pool == null || !pool.Exists(IsAvailable)) return;
+        if (!HasOptions()) return;
 
         pendingLevelUps++;
         if (!isOpen) Open();
@@ -60,11 +67,16 @@ public class UpgradeCardsUI : MonoBehaviour
 
     void ShowRandomCards()
     {
-        var options = pool.FindAll(IsAvailable);
-        for (int i = options.Count - 1; i > 0; i--)
+        var options = pool != null ? pool.FindAll(IsAvailable) : new List<UpgradeData>();
+        Shuffle(options);
+
+        // Si no hay cartas normales para todos los huecos, se completan con las de relleno.
+        if (options.Count < cards.Length && fallbackPool != null)
         {
-            int j = Random.Range(0, i + 1);
-            (options[i], options[j]) = (options[j], options[i]);
+            var fill = fallbackPool.FindAll(IsAvailable);
+            Shuffle(fill);
+            for (int i = 0; i < fill.Count && options.Count < cards.Length; i++)
+                options.Add(fill[i]);
         }
 
         for (int i = 0; i < cards.Length; i++)
@@ -75,6 +87,15 @@ public class UpgradeCardsUI : MonoBehaviour
 
             cards[i].Setup(options[i], Choose);
             cards[i].Button.interactable = false;
+        }
+    }
+
+    static void Shuffle(List<UpgradeData> list)
+    {
+        for (int i = list.Count - 1; i > 0; i--)
+        {
+            int j = Random.Range(0, i + 1);
+            (list[i], list[j]) = (list[j], list[i]);
         }
     }
 
@@ -97,7 +118,7 @@ public class UpgradeCardsUI : MonoBehaviour
         panel.SetActive(false);
         isOpen = false;
 
-        if (pendingLevelUps > 0 && pool.Exists(IsAvailable)) Open();
+        if (pendingLevelUps > 0 && HasOptions()) Open();
         else
         {
             pendingLevelUps = 0;

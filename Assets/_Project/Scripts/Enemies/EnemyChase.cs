@@ -4,6 +4,7 @@ using UnityEngine;
 public class EnemyChase : MonoBehaviour
 {
     [SerializeField, Min(0f)] private float speed = 4f;
+    public float SpeedMultiplier { get; set; } = 1f;
     [SerializeField, Min(0f)] private float stopDistance = 1.3f;
 
     [Header("Rodeo")]
@@ -234,7 +235,7 @@ public class EnemyChase : MonoBehaviour
 
         Vector2 step = Vector2.zero;
         if (desired.sqrMagnitude >= 0.0025f)
-            step = Vector2.ClampMagnitude(desired, 1f) * (speed * Time.fixedDeltaTime);
+            step = Vector2.ClampMagnitude(desired, 1f) * (speed * SpeedMultiplier * Time.fixedDeltaTime);
 
         // Ademas del empuje de direccion, los solapes reales se corrigen directamente en la posicion.
         step += correction;
