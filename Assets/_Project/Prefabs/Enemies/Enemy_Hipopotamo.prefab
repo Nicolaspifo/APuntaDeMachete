@@ -128,6 +128,7 @@ GameObject:
   - component: {fileID: -5497200916493339669}
   - component: {fileID: -101751274138356924}
   - component: {fileID: 2892628272935405323}
+  - component: {fileID: 5559235772803945322}
   m_Layer: 7
   m_Name: Enemy_Hipopotamo
   m_TagString: Untagged
@@ -240,7 +241,9 @@ MonoBehaviour:
   speed: 2.32
   stopDistance: 2
   flank: 1
-  flankSpread: 158
+  maxInnerSlots: 5
+  ringBaseRadius: 1.3
+  slotSpacingFactor: 1.4
   arriveSlowRadius: 0.8
   arriveTolerance: 0.2
   separationRadius: 1.34
@@ -248,6 +251,7 @@ MonoBehaviour:
   separationLayers:
     serializedVersion: 2
     m_Bits: 128
+  debugLog: 0
 --- !u!114 &1503558561976460445
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -368,3 +372,20 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
+--- !u!114 &5559235772803945322
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9121166166713209676}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 61b5c3604c682fb48a5b7e2f6840d535, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HitFlash
+  renderers: []
+  flashColor: {r: 1, g: 0.3, b: 0.3, a: 1}
+  flashes: 2
+  flashInterval: 0.07
+  useUnscaledTime: 1
