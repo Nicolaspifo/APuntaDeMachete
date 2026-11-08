@@ -20,22 +20,30 @@ public class Health : MonoBehaviour, IDamageable
     public event Action Died;
 
     public event Action<float, float> Damaged;
+    public static event Action<Health, float, DamageType> AnyDamaged;
+
 
     private void Awake() => Current = maxHealth;
 
     public void TakeDamage(float amount, GameObject source)
+        => TakeDamage(amount, source, DamageType.Normal);
+
+    public void TakeDamage(float amount, GameObject source, DamageType type)
     {
         if (IsDead || amount <= 0f || IsInvulnerable) return;
 
         invulnerableUntil = Time.time + invulnerabilitySeconds;
-        Current = Mathf.Max(Current - amount, 0f);
-        
+
+        float previous = Current;
+        Current = Mathf.Max(previous - amount, 0f);
+        float dealt = previous - Current;   // daño real aplicado
+
         Changed?.Invoke(Current, maxHealth);
-        Damaged?.Invoke(Current, maxHealth);   // NUEVO
+        Damaged?.Invoke(Current, maxHealth);
+        AnyDamaged?.Invoke(this, dealt, type);   // ahora incluye el tipo
 
         if (IsDead)
         {
-            
             Died?.Invoke();
         }
     }
