@@ -55,7 +55,10 @@ public class PoisonStatus : MonoBehaviour
         if (Time.time < nextTick) return;
 
         float damage = damagePerSecond * TickInterval;
-        target.TakeDamage(damage, source);
+        if (health != null)
+            health.TakeDamage(damage, source, DamageType.Poison);
+        else
+            target.TakeDamage(damage, source);
         nextTick = Time.time + TickInterval;
         tickCount++;
 
