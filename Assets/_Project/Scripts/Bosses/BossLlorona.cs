@@ -11,6 +11,10 @@ public class BossLlorona : MonoBehaviour
     [Header("Movimiento")]
     [SerializeField] float[] speedPerPhase = { 1.5f, 2f, 2.5f, 3f };
     [SerializeField] float stopDistance = 1.2f;
+    [Tooltip("Cuanto se desvia perpendicularmente al acercarse (serpenteo), para que no camine siempre en linea recta.")]
+    [SerializeField, Min(0f)] float weaveAmplitude = 1.2f;
+    [Tooltip("Ciclos de serpenteo por segundo, aprox.")]
+    [SerializeField, Min(0f)] float weaveFrequency = 0.6f;
 
     [Header("Embestida por fase (usa el ataque de EnemyContactDamage)")]
     [Tooltip("Metros que se lanza hacia el jugador en cada fase: crece con las fases.")]
@@ -105,10 +109,18 @@ public class BossLlorona : MonoBehaviour
 
         Vector2 pos = rb != null ? rb.position : (Vector2)transform.position;
         Vector2 toTarget = (Vector2)target.position - pos;
-        if (toTarget.magnitude <= attackDistance) return;
+        float distance = toTarget.magnitude;
+        if (distance <= attackDistance) return;
+
+        // Serpentea perpendicular a la linea hacia el jugador (se desvanece cerca del ataque, para no titubear
+        // justo al llegar): asi no camina siempre en linea recta, se siente mas vivo.
+        Vector2 dir = toTarget / Mathf.Max(distance, 0.0001f);
+        Vector2 perp = new Vector2(-dir.y, dir.x);
+        float weaveFalloff = Mathf.Clamp01((distance - attackDistance) / 3f);
+        Vector2 moveDir = (dir + perp * Mathf.Sin(Time.time * weaveFrequency * Mathf.PI * 2f) * weaveAmplitude * weaveFalloff).normalized;
 
         float speed = speedPerPhase[Mathf.Clamp(Phase - 1, 0, speedPerPhase.Length - 1)];
-        Vector2 next = pos + toTarget.normalized * speed * Time.fixedDeltaTime;
+        Vector2 next = pos + moveDir * speed * Time.fixedDeltaTime;
 
         if (rb != null) rb.MovePosition(next);
         else transform.position = next;
