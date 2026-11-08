@@ -156,15 +156,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ac3bbd6c1de9504ea4eca912481743b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyContactDamage
-  damage: 5
+  damage: 6.05
   range: 1.41
   cooldown: 1
   windup: 0.25
   recover: 0.3
   damageRadiusScale: 0.9
   lungeDistance: 1.5
-  lungeTime: 0.12
-  lungeHitRadius: 1
+  lungeTime: 0.11
+  lungeHitRadius: 1.2
   aimLockFraction: 0.6
   leadFactor: 0.7
   maxConcurrentAttackers: 3
@@ -326,6 +326,20 @@ MonoBehaviour:
   pitchJitter: 0.05
   avoidImmediateRepeat: 1
   ignorePoison: 1
+--- !u!114 &-2720629618376870074
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6203631419841849656}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7011dd9c1398b9d418f9e9dba20c9cbc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyScaling
+  maxSpeedMultiplier: 1.35
+  debugLog: 0
 --- !u!1 &8452636756499402141
 GameObject:
   m_ObjectHideFlags: 0
@@ -437,17 +451,3 @@ MonoBehaviour:
   duration: 0.15
   scaleToRange: 0
   rotateToAttackDirection: 1
---- !u!114 &-2720629618376870074
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6203631419841849656}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7011dd9c1398b9d418f9e9dba20c9cbc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::EnemyScaling
-  maxSpeedMultiplier: 1.35
-  debugLog: 0

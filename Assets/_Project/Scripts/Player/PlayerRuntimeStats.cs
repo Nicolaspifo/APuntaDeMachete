@@ -114,7 +114,7 @@ public class PlayerRuntimeStats : MonoBehaviour
     {
         bool applied = Apply(testUpgrade);
         Debug.Log(applied
-            ? $"{testUpgrade.DisplayName}: daño {Get(StatType.Damage)}, cooldown {Get(StatType.AttackCooldown)}, vida {Get(StatType.MaxHealth)}, velocidad x{MoveSpeedMultiplier:0.00}"
+            ? $"{testUpgrade.DisplayName}: daño {Get(StatType.Damage)}, cooldown {Get(StatType.AttackCooldown)}, vida {health.Current:0}/{Get(StatType.MaxHealth):0}, velocidad x{MoveSpeedMultiplier:0.00}"
             : "No se pudo aplicar: falta la mejora o llegó al máximo");
     }
 }

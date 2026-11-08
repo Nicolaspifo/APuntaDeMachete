@@ -2199,9 +2199,9 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 1197330632}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -907.3, y: 373.4}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 52.7, y: -166.6}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &427452245
@@ -2410,9 +2410,9 @@ RectTransform:
   - {fileID: 1822194398}
   m_Father: {fileID: 1197330632}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 740.7, y: 376}
+  m_AnchorMin: {x: 1, y: 1}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: -219.3, y: -164}
   m_SizeDelta: {x: 160, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &480448377
@@ -3772,9 +3772,9 @@ RectTransform:
   - {fileID: 1198170684}
   m_Father: {fileID: 1197330632}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 382}
+  m_AnchorMin: {x: 0.5, y: 1}
+  m_AnchorMax: {x: 0.5, y: 1}
+  m_AnchoredPosition: {x: 0, y: -158}
   m_SizeDelta: {x: 160, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &795110716
@@ -4107,9 +4107,9 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 1197330632}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -910.5, y: 261.2}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 49.5, y: -278.8}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &911933062
@@ -4350,9 +4350,9 @@ RectTransform:
   - {fileID: 5781498}
   m_Father: {fileID: 1197330632}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -444}
+  m_AnchorMin: {x: 0.5, y: 0}
+  m_AnchorMax: {x: 0.5, y: 0}
+  m_AnchoredPosition: {x: 0, y: 96}
   m_SizeDelta: {x: 160, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1026081534
@@ -4714,9 +4714,9 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 1197330632}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 70, y: 370}
+  m_AnchorMin: {x: 0.5, y: 1}
+  m_AnchorMax: {x: 0.5, y: 1}
+  m_AnchoredPosition: {x: 70, y: -170}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1188960378
@@ -5101,9 +5101,9 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 1197330632}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -755.7, y: 370.8}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 204.3, y: -169.2}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1214936403
@@ -6257,6 +6257,7 @@ GameObject:
   - component: {fileID: 1567529679}
   - component: {fileID: 1567529681}
   - component: {fileID: 1567529680}
+  - component: {fileID: 1567529690}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -7020,7 +7021,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a15f0435fc901244a818133563c76ea1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NightTimer
-  duration: 360
+  duration: 600
+  bossLevel: 15
   bossPrefab: {fileID: 536165718639125960, guid: 50cab15091f87be4591166397648d2d8, type: 3}
   player: {fileID: 1567529663}
   spawnDistance: 8
@@ -7333,36 +7335,37 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DifficultyDirector
   curve:
-  - time: 0
+  - round: 1
     spawnInterval: 2.5
     maxAlive: 10
     hp: 1
     damage: 1
     speed: 1
-  - time: 70
+  - round: 6
     spawnInterval: 1.8
     maxAlive: 14
     hp: 1
     damage: 1
     speed: 1
-  - time: 180
+  - round: 10
     spawnInterval: 1.2
     maxAlive: 20
     hp: 1.6
     damage: 1
     speed: 1.15
-  - time: 315
+  - round: 14
     spawnInterval: 0.7
     maxAlive: 30
     hp: 2.4
     damage: 1.3
     speed: 1.35
-  - time: 360
+  - round: 15
     spawnInterval: 0.7
     maxAlive: 30
     hp: 2.4
     damage: 1.3
     speed: 1.35
+  secondsPerRoundFallback: 40
   debugLog: 1
 --- !u!4 &1775845449
 Transform:
@@ -8541,9 +8544,9 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 1197330632}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -413}
+  m_AnchorMin: {x: 0.5, y: 0}
+  m_AnchorMax: {x: 0.5, y: 0}
+  m_AnchoredPosition: {x: 0, y: 127}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &2063678131
@@ -8607,7 +8610,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: bbfaa35c05665754b985f956825b6e44, type: 2}
   - {fileID: 11400000, guid: 03c14f381de1aca458065b736f48ce6d, type: 2}
   - {fileID: 11400000, guid: 3bea53474d292e7418886622e45f08f5, type: 2}
-  fallbackPool: []
+  fallbackPool:
+  - {fileID: 11400000, guid: 7c41d9e2a5b84f3e9d06b1a8c3f27e54, type: 2}
   inputDelay: 0.4
 --- !u!1 &2064246492
 GameObject:
@@ -8780,10 +8784,10 @@ MonoBehaviour:
   enemies:
   - prefab: {fileID: 6203631419841849656, guid: 5c576f40662f18a4abdb410c8112a95c, type: 3}
     weight: 3
-    unlockSeconds: 0
+    unlockRound: 1
   - prefab: {fileID: 9121166166713209676, guid: b201dc8c1b129a74a9ffad795b879bad, type: 3}
     weight: 1
-    unlockSeconds: 0
+    unlockRound: 5
   enemiesPerSpawn: 2
   maxAlive: 20
   useCameraBounds: 1
@@ -9008,6 +9012,25 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5c576f40662f18a4abdb410c8112a95c, type: 3}
+--- !u!114 &1567529690
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1567529661}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a3f1c2d47b8e4a90b5d6e1f203c94b7a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MultiHitXpBonus
+  minHits: 3
+  xpPerExtraHit: 2
+  streakMultipliers:
+  - 1
+  - 1.5
+  - 2
+  debugLog: 1
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

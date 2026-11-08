@@ -4,8 +4,13 @@ using UnityEngine;
 
 public class NightTimer : MonoBehaviour
 {
-    [Header("Tiempo")]
+    [Header("Tiempo (respaldo)")]
+    [Tooltip("Si el jugador no llega al nivel del jefe, este tiempo largo lo hace aparecer igualmente.")]
     [SerializeField] float duration = 180f;
+
+    [Header("Aparicion por nivel (rondas)")]
+    [Tooltip("Nivel del jugador al que aparece el jefe: cada nivel es una ronda, asi que quien sube mas rapido llega antes.")]
+    [SerializeField, Min(2)] int bossLevel = 15;
 
     [Header("Jefe")]
     [SerializeField] GameObject bossPrefab;
@@ -25,10 +30,31 @@ public class NightTimer : MonoBehaviour
     public bool BossSpawned { get; private set; }
     public event Action<GameObject> OnBossSpawned;
 
+    public int BossLevel => bossLevel;
+
+    PlayerXP playerXP;
+
     void Start()
     {
         Remaining = duration;
+
+        if (player != null && player.TryGetComponent(out playerXP))
+            playerXP.OnLevelUp += OnLevelUp;
+        else
+            Debug.LogWarning("NightTimer: no se encontro PlayerXP en el jugador; el jefe solo saldra por tiempo.", this);
+
         UpdateLabel();
+    }
+
+    void OnDestroy()
+    {
+        if (playerXP != null) playerXP.OnLevelUp -= OnLevelUp;
+    }
+
+    // Al llegar al nivel del jefe se completa la ultima ronda y aparece.
+    void OnLevelUp(int level)
+    {
+        if (!BossSpawned && level >= bossLevel) SpawnBoss();
     }
 
     void Update()
@@ -41,8 +67,10 @@ public class NightTimer : MonoBehaviour
         if (Remaining <= 0f) SpawnBoss();
     }
 
+    [ContextMenu("Probar: aparecer jefe ahora")]
     void SpawnBoss()
     {
+        if (BossSpawned) return;
         BossSpawned = true;
 
         foreach (var b in disableWhenBossAppears)
@@ -69,7 +97,9 @@ public class NightTimer : MonoBehaviour
     void UpdateLabel()
     {
         if (label == null) return;
-        int s = Mathf.CeilToInt(Remaining);
-        label.text = BossSpawned ? "¡LA LLORONA!" : $"{s / 60}:{s % 60:00}";
+
+        // Con rondas por XP el HUD muestra el avance hacia el jefe (nivel actual / nivel del jefe), no una cuenta atras.
+        int level = playerXP != null ? playerXP.Level : 1;
+        label.text = BossSpawned ? "¡LA LLORONA!" : $"RONDA {level}/{bossLevel}";
     }
 }

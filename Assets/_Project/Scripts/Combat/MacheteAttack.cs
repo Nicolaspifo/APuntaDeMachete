@@ -27,6 +27,8 @@ public class MacheteAttack : MonoBehaviour
 
     public event Action<Vector2> Attacked;
     public event Action<GameObject> Hit;
+    /// <summary>Se dispara al final de cada golpe con el numero de enemigos alcanzados (puede ser 0).</summary>
+    public event Action<int> SwingResolved;
 
     private readonly HashSet<IDamageable> hitThisSwing = new();
     private readonly Collider2D[] hitBuffer = new Collider2D[32]; // reutilizado: evita reservar memoria en cada golpe
@@ -105,6 +107,7 @@ public class MacheteAttack : MonoBehaviour
         if (debugLog) Debug.Log($"[Machete] Resultado: {hitCount} impactos", this);
 
         Attacked?.Invoke(forward);
+        SwingResolved?.Invoke(hitCount);
     }
 
 #if UNITY_EDITOR
