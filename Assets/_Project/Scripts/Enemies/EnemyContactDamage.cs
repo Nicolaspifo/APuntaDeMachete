@@ -48,6 +48,8 @@ public class EnemyContactDamage : MonoBehaviour
     // Contadores por tipo de enemigo (ataques iniciados / golpes que conectaron), para medir en RunMetrics.
     public static readonly Dictionary<string, int> WindupCount = new();
     public static readonly Dictionary<string, int> HitCount = new();
+    // Ataques que no llegaron a golpear porque el enemigo murio (o se desactivo) cargando o embistiendo.
+    public static readonly Dictionary<string, int> CancelledCount = new();
 
     private static void Count(Dictionary<string, int> map, string enemyName)
     {
@@ -57,7 +59,17 @@ public class EnemyContactDamage : MonoBehaviour
     }
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-    private static void ResetCounters() { WindupCount.Clear(); HitCount.Clear(); }
+    private static void ResetCounters() { WindupCount.Clear(); HitCount.Clear(); CancelledCount.Clear(); }
+
+    /// <summary>Ajusta la embestida en ejecucion (el jefe la hace mas larga en cada fase).</summary>
+    public void SetLunge(float distance, float time)
+    {
+        lungeDistance = Mathf.Max(0f, distance);
+        lungeTime = Mathf.Max(0.05f, time);
+    }
+
+    /// <summary>Distancia a la que empieza a cargar el ataque.</summary>
+    public void SetRange(float newRange) => range = Mathf.Max(0.2f, newRange);
 
     public float Range => range;
     public float Windup => windup;
@@ -235,7 +247,12 @@ public class EnemyContactDamage : MonoBehaviour
     private float DistanceSqToTarget() =>
         ((Vector2)target.position - (Vector2)transform.position).sqrMagnitude;
 
-    private void OnDisable() => AttackTokens.Release(this);
+    private void OnDisable()
+    {
+        // Si moria mientras cargaba o embestia, ese ataque no cuenta como fallo del enemigo sino como cancelado.
+        if (state == State.Windup || state == State.Lunge) Count(CancelledCount, name);
+        AttackTokens.Release(this);
+    }
 
     private void OnDrawGizmosSelected()
     {

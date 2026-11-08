@@ -44,6 +44,20 @@ public class UpgradeCardsUI : MonoBehaviour
         if (playerHealth != null && playerHealth.IsDead) return;
         if (!HasOptions()) return;
 
+        // Agotadas las cartas normales, si solo queda UNA de relleno se aplica directamente: sin pausa
+        // (elegir siempre lo mismo en cada nivel romperia el ritmo). Con 2 o mas se muestran las cartas.
+        bool hasNormal = pool != null && pool.Exists(IsAvailable);
+        if (!hasNormal && fallbackPool != null)
+        {
+            var fill = fallbackPool.FindAll(IsAvailable);
+            if (fill.Count == 1)
+            {
+                if (stats != null) stats.Apply(fill[0]);
+                OnUpgradeChosen?.Invoke(fill[0]);
+                return;
+            }
+        }
+
         pendingLevelUps++;
         if (!isOpen) Open();
     }

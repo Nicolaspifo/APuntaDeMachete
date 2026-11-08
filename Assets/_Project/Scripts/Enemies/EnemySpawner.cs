@@ -8,8 +8,8 @@ public class EnemySpawner : MonoBehaviour
     {
         public GameObject prefab;
         [Min(0f)] public float weight = 1f;
-        [Tooltip("Segundo de la partida desde el que puede salir (usa el DifficultyDirector). 0 = desde el inicio.")]
-        [Min(0f)] public float unlockSeconds = 0f;
+        [Tooltip("Ronda (nivel del jugador) desde la que puede salir este enemigo (usa el DifficultyDirector). 1 = desde el inicio.")]
+        [Min(1)] public int unlockRound = 1;
     }
 
     [Header("Enemigos")]
@@ -92,13 +92,13 @@ public class EnemySpawner : MonoBehaviour
         }
     }
 
-    // Valido si tiene prefab y peso y, con director, si ya paso su segundo de desbloqueo.
+    // Valido si tiene prefab y peso y, con director, si ya se alcanzo su ronda de desbloqueo.
     private static bool IsSpawnable(EnemyEntry entry)
     {
         if (entry == null || entry.prefab == null || entry.weight <= 0f) return false;
 
         DifficultyDirector director = DifficultyDirector.Instance;
-        return director == null || director.Elapsed >= entry.unlockSeconds;
+        return director == null || director.Round >= entry.unlockRound;
     }
 
     private GameObject PickRandomPrefab()

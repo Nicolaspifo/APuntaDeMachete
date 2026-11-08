@@ -10,7 +10,15 @@ public class PlayerXP : MonoBehaviour
 
     Health health;
 
-    void Awake() => TryGetComponent(out health);
+    void Awake()
+    {
+        TryGetComponent(out health);
+
+        // El bonus de XP por impactos multiples es parte del bucle de progresion: si el Player no lo tiene en la
+        // escena (o quedo como "script missing"), se anade aqui con los valores por defecto para que nunca falte.
+        if (!TryGetComponent<MultiHitXpBonus>(out _) && TryGetComponent<MacheteAttack>(out _))
+            gameObject.AddComponent<MultiHitXpBonus>();
+    }
 
     public int Level { get; private set; } = 1;
     public int CurrentXP { get; private set; } 

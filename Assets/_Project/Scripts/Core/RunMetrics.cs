@@ -18,6 +18,8 @@ public class RunMetrics : MonoBehaviour
     private float damageTaken;
     private float lastHealth;
     private float firstLevelTime = -1f;
+    private MultiHitXpBonus multiHit;
+    private NightTimer nightTimer;
 
     private void OnEnable()
     {
@@ -32,12 +34,26 @@ public class RunMetrics : MonoBehaviour
         GameEvents.EnemyKilled -= OnEnemyKilled;
         if (playerXP != null) playerXP.OnLevelUp -= OnLevelUp;
         if (playerHealth != null) playerHealth.Changed -= OnHealthChanged;
+        if (nightTimer != null) nightTimer.OnBossSpawned -= OnBossSpawned;
     }
 
     private void Start()
     {
         nextLog = logInterval;
         if (playerHealth != null) lastHealth = minHealth = playerHealth.Current;
+
+        multiHit = FindAnyObjectByType<MultiHitXpBonus>();
+        if (multiHit == null)
+            Debug.LogWarning("[Run] No hay MultiHitXpBonus en el Player: no se mide ni se da el bonus de XP por impactos multiples.", this);
+
+        nightTimer = FindAnyObjectByType<NightTimer>();
+        if (nightTimer != null) nightTimer.OnBossSpawned += OnBossSpawned;
+    }
+
+    private void OnBossSpawned(GameObject boss)
+    {
+        string level = playerXP != null ? playerXP.Level.ToString() : "?";
+        Debug.Log($"[Run] ¡Aparecio el jefe a los {elapsed:0}s ({(int)(elapsed / 60f):00}:{(int)(elapsed % 60f):00}) con el jugador en nivel {level}! | kills {kills} | dano recibido {damageTaken:0}", this);
     }
 
     private void Update()
@@ -74,15 +90,25 @@ public class RunMetrics : MonoBehaviour
         string speed = stats != null ? $"x{stats.MoveSpeedMultiplier:0.00}" : "?";
         string first = firstLevelTime >= 0f ? $"{firstLevelTime:0}s" : "-";
 
-        string difficulty = $"vida x{DifficultyScale.Hp:0.0} dmg x{DifficultyScale.Damage:0.0} vel x{DifficultyScale.Speed:0.00}";
+        DifficultyDirector director = DifficultyDirector.Instance;
+        string round = director != null ? $"ronda {director.Round} | " : "";
+        string difficulty = $"{round}vida x{DifficultyScale.Hp:0.0} dmg x{DifficultyScale.Damage:0.0} vel x{DifficultyScale.Speed:0.00}";
 
         Debug.Log($"[Run {minutes:00}:{seconds:00}] nivel {level} (1er nivel a {first}) | kills {kills} | vivos {alive} | vida {hp} | daño recibido {damageTaken:0} | velocidad {speed} | enemigos: {difficulty}", this);
+
+        // Bonus de XP por impactos multiples: cuanto se usa y cuanto aporta.
+        if (multiHit != null && multiHit.Swings > 0)
+        {
+            Debug.Log($"[Run]   Machete: {multiHit.Swings} golpes, {100f * multiHit.MultiHitSwings / multiHit.Swings:0}% con 3+ impactos, {(float)multiHit.TotalHits / multiHit.Swings:0.0} impactos por golpe, +{multiHit.BonusXpTotal} XP por bonus", this);
+        }
 
         // Acierto por tipo: ataques que empezaron vs golpes que realmente conectaron.
         foreach (var pair in EnemyContactDamage.WindupCount)
         {
             EnemyContactDamage.HitCount.TryGetValue(pair.Key, out int hits);
-            Debug.Log($"[Run]   {pair.Key}: {hits} golpes acertados de {pair.Value} ataques ({100f * hits / pair.Value:0}%)", this);
+            EnemyContactDamage.CancelledCount.TryGetValue(pair.Key, out int cancelled);
+            int resolved = Mathf.Max(1, pair.Value - cancelled);   // ataques que llegaron al golpe (sin los cancelados por muerte)
+            Debug.Log($"[Run]   {pair.Key}: {hits} golpes acertados de {pair.Value} ataques ({100f * hits / pair.Value:0}%) | cancelados al morir {cancelled} | acierto real {100f * hits / resolved:0}%", this);
         }
 
         minHealth = playerHealth != null ? playerHealth.Current : 0f; // el minimo se mide por intervalo

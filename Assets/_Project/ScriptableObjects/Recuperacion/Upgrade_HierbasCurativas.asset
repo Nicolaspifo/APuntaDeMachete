@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::UpgradeData
   id: hierbas_curativas
   displayName: Hierbas Curativas
-  description: Recupera el 35% de la vida maxima
+  description: Recupera el 25% de la vida maxima
   icon: {fileID: 0}
   maxStacks: 1
   modifiers: []
-  healPercent: 0.35
+  healPercent: 0.25
