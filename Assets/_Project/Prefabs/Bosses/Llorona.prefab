@@ -21,6 +21,7 @@ GameObject:
   - component: {fileID: -4365740493875044433}
   - component: {fileID: 7393888355405980606}
   - component: {fileID: -2087920910820921698}
+  - component: {fileID: 7100000000000000001}
   m_Layer: 7
   m_Name: Llorona
   m_TagString: Untagged
@@ -143,7 +144,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemyContactDamage
   damage: 15
   range: 3
-  cooldown: 2
+  cooldown: 3.5
   windup: 0.6
   recover: 0.6
   damageRadiusScale: 0.9
@@ -262,16 +263,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CryAttack
   intervalPerPhase:
-  - 8
-  - 7
-  - 5.5
+  - 6
+  - 5
   - 4
+  - 3
   radiusPerPhase:
   - 4
   - 4.5
   - 5.5
   - 6
-  warningTime: 1
+  warningTimePerPhase:
+  - 0.8
+  - 0.7
+  - 0.6
+  - 0.5
   stunDuration: 1.5
   firstCryDelay: 3
   warningColor: {r: 1, g: 0.19999999, b: 0.6885592, a: 1}
@@ -376,3 +381,26 @@ MonoBehaviour:
   pitchJitter: 0
   avoidImmediateRepeat: 1
   ignorePoison: 1
+--- !u!114 &7100000000000000001
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 536165718639125960}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e5b81d3a6f2c4a97b0c4d92e8a1f3b67, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::StunTileAttack
+  tilesPerPhase:
+  - 0
+  - 3
+  - 4
+  - 6
+  tileSize: 2
+  warningTime: 1.2
+  stunDuration: 1.2
+  ringMargin: 1.2
+  scatter: 4
+  warningColor: {r: 1, g: 0.1, b: 0.2, a: 0.55}

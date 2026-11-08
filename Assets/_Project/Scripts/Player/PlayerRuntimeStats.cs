@@ -9,6 +9,8 @@ public class PlayerRuntimeStats : MonoBehaviour
     [SerializeField, Min(0f)] private float baseMoveSpeed = 5f;
     [SerializeField, Min(0f)] private float basePickupRadius = 2f;
     [SerializeField] private UpgradeData testUpgrade;
+    [Tooltip("Todas las mejoras del juego. Solo lo usa la prueba 'maxear todas las mejoras'.")]
+    [SerializeField] private UpgradeData[] allUpgrades;
     [SerializeField, Min(0f)] private float basePoisonDuration = 3f;
 
     [Header("Topes")]
@@ -116,5 +118,26 @@ public class PlayerRuntimeStats : MonoBehaviour
         Debug.Log(applied
             ? $"{testUpgrade.DisplayName}: daño {Get(StatType.Damage)}, cooldown {Get(StatType.AttackCooldown)}, vida {health.Current:0}/{Get(StatType.MaxHealth):0}, velocidad x{MoveSpeedMultiplier:0.00}"
             : "No se pudo aplicar: falta la mejora o llegó al máximo");
+    }
+
+    [ContextMenu("Prueba: maxear todas las mejoras")]
+    private void TestMaxAll()
+    {
+        if (allUpgrades == null || allUpgrades.Length == 0)
+        {
+            Debug.LogWarning("[Prueba] Asigna las mejoras en 'All Upgrades' del PlayerRuntimeStats.", this);
+            return;
+        }
+
+        int applied = 0;
+        foreach (UpgradeData upgrade in allUpgrades)
+        {
+            if (upgrade == null || upgrade.IsConsumable) continue;
+            // Apply devuelve false al llegar al maximo de acumulaciones; el limite de 99 evita bucles infinitos.
+            for (int i = 0; i < 99 && Apply(upgrade); i++) applied++;
+        }
+
+        health.Heal(health.Max);   // al maxear, la vida queda llena
+        Debug.Log($"[Prueba] {applied} acumulaciones aplicadas | daño {Get(StatType.Damage):0.0} | cooldown {Get(StatType.AttackCooldown):0.00} | alcance {Get(StatType.AttackRange):0.0} | vida {health.Current:0}/{Get(StatType.MaxHealth):0} | velocidad x{MoveSpeedMultiplier:0.00} | recogida {Get(StatType.PickupRadius):0.0}", this);
     }
 }

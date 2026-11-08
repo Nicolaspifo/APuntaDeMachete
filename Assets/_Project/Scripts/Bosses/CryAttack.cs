@@ -5,17 +5,22 @@ using UnityEngine;
 [RequireComponent(typeof(BossLlorona))]
 public class CryAttack : MonoBehaviour
 {
-    [SerializeField] float[] intervalPerPhase = { 8f, 6f, 4f };
+    [SerializeField] float[] intervalPerPhase = { 6f, 5f, 4f, 3f };
     [SerializeField] float[] radiusPerPhase = { 4f, 5f, 6f };
-    [SerializeField] float warningTime = 1f;
+    [Tooltip("Segundos de aviso del aro por fase: menos tiempo = ataque mas rapido y mas dificil de esquivar.")]
+    [SerializeField] float[] warningTimePerPhase = { 0.8f, 0.7f, 0.6f, 0.5f };
     [Tooltip("Daño del aro como fraccion de la vida maxima del jugador (0.3 = 30 %). El aturdimiento lo dan las casillas del suelo.")]
-    [SerializeField, Range(0f, 1f)] float ringDamagePercent = 0.3f;
+    [SerializeField, Range(0f, 1f)] float ringDamagePercent = 0.25f;
     [SerializeField] float firstCryDelay = 3f;
     [SerializeField] Color warningColor = new Color(1f, 0.2f, 0.2f, 1f);
     [SerializeField] Material lineMaterial;   // opcional
 
     /// <summary>Se dispara cuando la Llorona empieza a gritar (antes del aviso circular).</summary>
     public event Action CryStarted;
+
+    /// <summary>Radio y aviso del canto en curso (validos desde que se dispara CryStarted).</summary>
+    public float Radius { get; private set; }
+    public float WarningTime { get; private set; }
 
     const int Segments = 48;
 
@@ -63,9 +68,12 @@ public class CryAttack : MonoBehaviour
         crying = true;
         boss.MovementLocked = true;
 
-        CryStarted?.Invoke();
-
         float radius = Pick(radiusPerPhase);
+        float warningTime = Pick(warningTimePerPhase);
+        Radius = radius;
+        WarningTime = warningTime;
+
+        CryStarted?.Invoke();
 
         ring.enabled = true;
         for (float t = 0f; t < warningTime; t += Time.deltaTime)

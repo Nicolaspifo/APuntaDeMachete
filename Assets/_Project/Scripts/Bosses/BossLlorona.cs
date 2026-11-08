@@ -14,7 +14,7 @@ public class BossLlorona : MonoBehaviour
 
     [Header("Embestida por fase (usa el ataque de EnemyContactDamage)")]
     [Tooltip("Metros que se lanza hacia el jugador en cada fase: crece con las fases.")]
-    [SerializeField] float[] lungeDistancePerPhase = { 3.5f, 5f, 6.5f, 8f };
+    [SerializeField] float[] lungeDistancePerPhase = { 2.5f, 3.5f, 4.5f, 5.5f };
     [Tooltip("Duracion de la embestida por fase: menos tiempo = mas rapida.")]
     [SerializeField] float[] lungeTimePerPhase = { 0.3f, 0.3f, 0.28f, 0.26f };
     [Tooltip("El ataque empieza a cargarse a esta fraccion de la distancia de embestida.")]

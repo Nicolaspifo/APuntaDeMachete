@@ -953,6 +953,7 @@ GameObject:
   m_Component:
   - component: {fileID: 247508562}
   - component: {fileID: 247508561}
+  - component: {fileID: 9100000000000000001}
   m_Layer: 0
   m_Name: RunMetrics
   m_TagString: Untagged
@@ -976,6 +977,28 @@ MonoBehaviour:
   playerHealth: {fileID: 1567529667}
   stats: {fileID: 1567529671}
   logInterval: 30
+--- !u!114 &9100000000000000001
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 247508560}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b7e4c2a1d9f04e6a8c3b5d7e9f1a2b4c, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::RunScore
+  pointsPerKill: 10
+  bossTimeReference: 360
+  pointsPerSecondSaved: 20
+  noDamageBonus: 4000
+  pointsPerDamageLost: 10
+  bossKillBonus: 5000
+  fightTimeReference: 120
+  pointsPerFightSecondSaved: 30
+  pointsPerLevelOnDeath: 100
+  debugLog: 1
 --- !u!4 &247508562
 Transform:
   m_ObjectHideFlags: 0
@@ -6506,6 +6529,16 @@ MonoBehaviour:
   baseMoveSpeed: 5
   basePickupRadius: 2
   testUpgrade: {fileID: 11400000, guid: 3bea53474d292e7418886622e45f08f5, type: 2}
+  allUpgrades:
+  - {fileID: 11400000, guid: 6e19d9772556c4f4c8c9bec8a387ea4e, type: 2}
+  - {fileID: 11400000, guid: 27ac747f825ac8f4bbdbe2a6beb619aa, type: 2}
+  - {fileID: 11400000, guid: d81aaf3d9834a0143ae5b2b25520ac45, type: 2}
+  - {fileID: 11400000, guid: 410146e28b869dd4387d57d3e7e99cbe, type: 2}
+  - {fileID: 11400000, guid: bbfaa35c05665754b985f956825b6e44, type: 2}
+  - {fileID: 11400000, guid: 03c14f381de1aca458065b736f48ce6d, type: 2}
+  - {fileID: 11400000, guid: 3bea53474d292e7418886622e45f08f5, type: 2}
+  - {fileID: 11400000, guid: 0a5005a0c05b2784f98dec49ba082767, type: 2}
+  - {fileID: 11400000, guid: 7c41d9e2a5b84f3e9d06b1a8c3f27e54, type: 2}
   basePoisonDuration: 3
   maxMoveSpeedMultiplier: 1.35
 --- !u!114 &1567529672
