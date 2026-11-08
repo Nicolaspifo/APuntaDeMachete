@@ -14,11 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::UpgradeData
   id: colibri
   displayName: Colibri
-  description: Ataca mas rapido
-  icon: {fileID: 6915274246977260906, guid: 8791ad580a52c5b4e83329c5a34333d0, type: 3}
+  description: atack cooldown
+  icon: {fileID: 0}
   maxStacks: 3
   modifiers:
   - stat: 1
     op: 1
     value: 0.8
-  healPercent: 0

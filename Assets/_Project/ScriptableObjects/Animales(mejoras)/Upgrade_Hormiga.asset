@@ -15,10 +15,9 @@ MonoBehaviour:
   id: hormiga_arriera
   displayName: Hormiga Arriera
   description: "Radio de recolecci\xF3n aumenta \n"
-  icon: {fileID: -5732475034366738421, guid: 8791ad580a52c5b4e83329c5a34333d0, type: 3}
+  icon: {fileID: 0}
   maxStacks: 3
   modifiers:
   - stat: 5
     op: 1
     value: 1.5
-  healPercent: 0

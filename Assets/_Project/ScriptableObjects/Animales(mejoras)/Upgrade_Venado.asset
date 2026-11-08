@@ -14,11 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::UpgradeData
   id: venado
   displayName: Venado
-  description: "Aumenta velocidad de movimiento \n"
-  icon: {fileID: -1068534300636159287, guid: 8791ad580a52c5b4e83329c5a34333d0, type: 3}
+  description: 'velocidad de movimiento aumenta
+
+'
+  icon: {fileID: 0}
   maxStacks: 3
   modifiers:
   - stat: 3
     op: 1
     value: 1.08
-  healPercent: 0

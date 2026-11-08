@@ -21,7 +21,6 @@ public class UpgradeCardView : MonoBehaviour
 
     public void Setup(UpgradeData upgrade, System.Action<UpgradeData> onPicked)
     {
-        Debug.Log($"upgrade:{upgrade != null} title:{titleText != null} desc:{descriptionText != null}", this);
         titleText.text = upgrade.DisplayName;
         descriptionText.text = upgrade.Description;
 
