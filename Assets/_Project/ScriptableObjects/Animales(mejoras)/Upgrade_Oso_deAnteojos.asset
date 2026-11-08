@@ -14,10 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::UpgradeData
   id: oso_ante
   displayName: Oso De Anteojos
-  description: "aumento de salud m\xE1xima\n"
-  icon: {fileID: 0}
+  description: "Aumento de salud m\xE1xima\n"
+  icon: {fileID: 8691080437131178365, guid: 8791ad580a52c5b4e83329c5a34333d0, type: 3}
   maxStacks: 3
   modifiers:
   - stat: 4
     op: 0
     value: 20
+  healPercent: 0

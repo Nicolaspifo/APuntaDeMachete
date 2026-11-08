@@ -15,9 +15,10 @@ MonoBehaviour:
   id: jaguar
   displayName: Jaguar
   description: "+25% de da\xF1o\n"
-  icon: {fileID: 0}
+  icon: {fileID: 5134945275485212650, guid: 8791ad580a52c5b4e83329c5a34333d0, type: 3}
   maxStacks: 3
   modifiers:
   - stat: 0
     op: 1
     value: 1.25
+  healPercent: 0
