@@ -14,6 +14,8 @@ using UnityEngine;
 ///   Speed (float): 0 = quieto, 1 = caminando.
 ///   Direction (int): 0 = abajo-izquierda, 1 = abajo-derecha, 2 = arriba-izquierda, 3 = arriba-derecha.
 ///   Attack (trigger): se dispara en cada golpe del machete.
+///   Die (trigger, opcional): se dispara al morir (Health.Died). Si el Animator Controller no tiene este
+///   parametro (todavia no hay animacion de muerte del jugador), se ignora sin error, igual que en EnemyAnimator.
 /// </summary>
 [RequireComponent(typeof(Animator))]
 public class PlayerAnimator : MonoBehaviour
@@ -21,6 +23,7 @@ public class PlayerAnimator : MonoBehaviour
     [Header("Referencias (se buscan solas si se dejan vacias)")]
     [SerializeField] private PlayerMovement movement;
     [SerializeField] private MacheteAttack attack;
+    [SerializeField] private Health health;
 
     [Tooltip("Magnitud minima del input para cambiar ese eje. Evita cambios por ruido del joystick.")]
     [SerializeField, Range(0f, 0.9f)] private float axisThreshold = 0.25f;
@@ -35,6 +38,10 @@ public class PlayerAnimator : MonoBehaviour
     private static readonly int SpeedHash = Animator.StringToHash("Speed");
     private static readonly int DirectionHash = Animator.StringToHash("Direction");
     private static readonly int AttackHash = Animator.StringToHash("Attack");
+    private static readonly int DieHash = Animator.StringToHash("Die");
+
+    private bool hasDie;
+    private bool isDead;
 
     private void Awake()
     {
@@ -42,6 +49,9 @@ public class PlayerAnimator : MonoBehaviour
 
         if (movement == null) movement = GetComponent<PlayerMovement>();
         if (attack == null) attack = GetComponent<MacheteAttack>();
+        if (health == null) health = GetComponent<Health>();
+
+        hasDie = HasParameter(DieHash);
     }
 
     private void Start()
@@ -53,19 +63,40 @@ public class PlayerAnimator : MonoBehaviour
     private void OnEnable()
     {
         if (attack != null) attack.Attacked += OnAttacked;
+        if (health != null) health.Died += OnDied;
     }
 
     private void OnDisable()
     {
         if (attack != null) attack.Attacked -= OnAttacked;
+        if (health != null) health.Died -= OnDied;
     }
 
     private void Update()
     {
+        if (isDead) return;
+
         if (movement != null && movement.IsMoving)
             SetFacing(movement.MoveInput);
 
         animator.SetFloat(SpeedHash, movement != null && movement.IsMoving ? 1f : 0f);
+    }
+
+    private void OnDied()
+    {
+        if (isDead) return;
+        isDead = true;
+
+        animator.SetFloat(SpeedHash, 0f);
+        if (hasDie) animator.SetTrigger(DieHash);
+    }
+
+    private bool HasParameter(int hash)
+    {
+        foreach (AnimatorControllerParameter parameter in animator.parameters)
+            if (parameter.nameHash == hash) return true;
+
+        return false;
     }
 
     private void OnAttacked(Vector2 direction)
