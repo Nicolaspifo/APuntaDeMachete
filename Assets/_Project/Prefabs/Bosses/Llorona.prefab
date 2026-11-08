@@ -144,8 +144,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ac3bbd6c1de9504ea4eca912481743b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyContactDamage
-  damage: 11.2
-  range: 3
+  damage: 14
+  range: 3.05
   cooldown: 3.5
   windup: 0.57
   recover: 0.6
