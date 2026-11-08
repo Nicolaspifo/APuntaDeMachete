@@ -14,10 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::UpgradeData
   id: condor
   displayName: Condor
-  description: 'aumento de rango '
-  icon: {fileID: 0}
+  description: Aumento de rango de ataque
+  icon: {fileID: 3676275472638612809, guid: 8791ad580a52c5b4e83329c5a34333d0, type: 3}
   maxStacks: 3
   modifiers:
   - stat: 2
     op: 1
     value: 1.25
+  healPercent: 0

@@ -14,10 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::UpgradeData
   id: rana_dorada
   displayName: 'Rana Dorada '
-  description: "A\xF1ade la propieda de envenenar "
-  icon: {fileID: 0}
+  description: '+1 Veneno '
+  icon: {fileID: -1068534300636159287, guid: 8791ad580a52c5b4e83329c5a34333d0, type: 3}
   maxStacks: 3
   modifiers:
   - stat: 6
     op: 0
     value: 2
+  healPercent: 0
