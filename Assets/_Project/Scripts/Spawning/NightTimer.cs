@@ -10,7 +10,7 @@ public class NightTimer : MonoBehaviour
 
     [Header("Aparicion por nivel (rondas)")]
     [Tooltip("Nivel del jugador al que aparece el jefe: cada nivel es una ronda, asi que quien sube mas rapido llega antes.")]
-    [SerializeField, Min(2)] int bossLevel = 15;
+    [SerializeField, Min(2)] int bossLevel = 18;
 
     [Header("Jefe")]
     [SerializeField] GameObject bossPrefab;

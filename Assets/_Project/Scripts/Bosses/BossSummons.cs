@@ -5,12 +5,18 @@ using UnityEngine;
 [RequireComponent(typeof(BossLlorona))]
 public class BossSummons : MonoBehaviour
 {
-    [Serializable] public class Entry { public GameObject prefab; [Min(1)] public int count = 1; }
+    [Serializable] public class Entry
+    {
+        public GameObject prefab;
+        [Min(1)] public int count = 1;
+        [Tooltip("Vida extra de este refuerzo (se multiplica sobre la dificultad actual).")] public float hpMultiplier = 1f;
+        [Tooltip("Daño extra de este refuerzo.")] public float damageMultiplier = 1f;
+    }
     [Serializable] public class PhaseSummons { public float interval = 8f; public Entry[] entries; }
 
-    [SerializeField] PhaseSummons[] phases;   // 3 elementos: fase 1, 2 y 3
+    [SerializeField] PhaseSummons[] phases;   // 4 elementos: etapa 1 (100-75 %), 2, 3 y 4
     [SerializeField] float spawnRadius = 3f;
-    [SerializeField] int maxAlive = 25;
+    [SerializeField] int maxAlive = 10;
     [SerializeField] float firstDelay = 4f;
     [SerializeField] bool killSummonsOnDeath = false;
 
@@ -23,8 +29,9 @@ public class BossSummons : MonoBehaviour
         phases = new[]
         {
             new PhaseSummons { interval = 9f },
+            new PhaseSummons { interval = 8f },
+            new PhaseSummons { interval = 9f },
             new PhaseSummons { interval = 7f },
-            new PhaseSummons { interval = 5f },
         };
     }
 
@@ -69,6 +76,7 @@ public class BossSummons : MonoBehaviour
                 Vector2 pos = (Vector2)transform.position +
                               UnityEngine.Random.insideUnitCircle.normalized * spawnRadius;
                 GameObject go = Instantiate(e.prefab, pos, Quaternion.identity);
+                if (go.TryGetComponent(out EnemyScaling scaling)) scaling.SetExtra(e.hpMultiplier, e.damageMultiplier);
                 go.SetActive(true);
                 alive.Add(go);
             }

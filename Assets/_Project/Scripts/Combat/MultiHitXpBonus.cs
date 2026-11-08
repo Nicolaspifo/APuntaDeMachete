@@ -16,9 +16,13 @@ public class MultiHitXpBonus : MonoBehaviour
     [Tooltip("Impactos minimos en un mismo golpe para dar bonus.")]
     [SerializeField, Min(2)] private int minHits = 3;
     [Tooltip("XP por cada enemigo alcanzado por encima del minimo menos uno (3 impactos = 1 enemigo extra).")]
-    [SerializeField, Min(0f)] private float xpPerExtraHit = 2f;
+    [SerializeField, Min(0f)] private float xpPerExtraHit = 3f;
     [Tooltip("Multiplicador segun la racha: golpes multiples consecutivos. El ultimo valor es el tope.")]
     [SerializeField] private float[] streakMultipliers = { 1f, 1.5f, 2f };
+    [Tooltip("Maximo de impactos que cuentan por golpe: evita bonus enormes cuando 11 enemigos quedan pegados.")]
+    [SerializeField, Min(3)] private int maxCountedHits = 6;
+    [Tooltip("El bonus de un solo golpe no supera esta fraccion de la XP que cuesta el siguiente nivel.")]
+    [SerializeField, Range(0.05f, 1f)] private float maxFractionOfLevel = 0.35f;
 
     [Header("Depuracion")]
     [SerializeField] private bool debugLog = true;
@@ -73,7 +77,10 @@ public class MultiHitXpBonus : MonoBehaviour
             Streak = Mathf.Min(Streak + 1, Mathf.Max(1, streakMultipliers.Length));
 
             float multiplier = streakMultipliers.Length > 0 ? streakMultipliers[Streak - 1] : 1f;
-            int bonus = Mathf.Max(1, Mathf.RoundToInt((hits - (minHits - 1)) * xpPerExtraHit * multiplier));
+            int counted = Mathf.Min(hits, maxCountedHits);
+            int raw = Mathf.RoundToInt((counted - (minHits - 1)) * xpPerExtraHit * multiplier);
+            int cap = Mathf.Max(1, Mathf.RoundToInt(xp.XpToNextLevel * maxFractionOfLevel));
+            int bonus = Mathf.Clamp(raw, 1, cap);
 
             BonusXpTotal += bonus;
             if (debugLog) Debug.Log($"[Racha] {hits} impactos -> +{bonus} XP (racha x{multiplier:0.0})", this);

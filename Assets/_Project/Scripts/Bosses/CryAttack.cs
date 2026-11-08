@@ -8,7 +8,8 @@ public class CryAttack : MonoBehaviour
     [SerializeField] float[] intervalPerPhase = { 8f, 6f, 4f };
     [SerializeField] float[] radiusPerPhase = { 4f, 5f, 6f };
     [SerializeField] float warningTime = 1f;
-    [SerializeField] float stunDuration = 1.5f;
+    [Tooltip("Daño del aro como fraccion de la vida maxima del jugador (0.3 = 30 %). El aturdimiento lo dan las casillas del suelo.")]
+    [SerializeField, Range(0f, 1f)] float ringDamagePercent = 0.3f;
     [SerializeField] float firstCryDelay = 3f;
     [SerializeField] Color warningColor = new Color(1f, 0.2f, 0.2f, 1f);
     [SerializeField] Material lineMaterial;   // opcional
@@ -19,7 +20,7 @@ public class CryAttack : MonoBehaviour
     const int Segments = 48;
 
     BossLlorona boss;
-    Stunnable target;
+    Health target;
     LineRenderer ring;
     float cooldown;
     bool crying;
@@ -41,8 +42,9 @@ public class CryAttack : MonoBehaviour
 
     void Start()
     {
-        target = FindAnyObjectByType<Stunnable>();
-        if (target == null) Debug.LogWarning("CryAttack: el Player no tiene el componente Stunnable.");
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        if (player != null) player.TryGetComponent(out target);
+        if (target == null) Debug.LogWarning("CryAttack: no se encontro la Health del Player (tag Player).");
 
         cooldown = firstCryDelay;
         boss.OnPhaseChanged += _ => cooldown = Mathf.Min(cooldown, 1f);
@@ -77,9 +79,14 @@ public class CryAttack : MonoBehaviour
         }
         ring.enabled = false;
 
-        if (target != null &&
+        // El aro hace mucho daño a quien siga dentro cuando termina el aviso.
+        if (target != null && !target.IsDead &&
             Vector2.Distance(target.transform.position, transform.position) <= radius)
-            target.TryStun(stunDuration);
+        {
+            float damage = target.Max * ringDamagePercent;
+            target.TakeDamage(damage, gameObject);
+            Debug.Log($"[Llorona] El canto golpeo al jugador: {damage:0} de daño ({ringDamagePercent:P0} de su vida maxima)");
+        }
 
         boss.MovementLocked = false;
         cooldown = Pick(intervalPerPhase);

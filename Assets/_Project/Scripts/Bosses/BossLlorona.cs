@@ -5,12 +5,20 @@ using UnityEngine;
 public class BossLlorona : MonoBehaviour
 {
     [Header("Fases (% de vida)")]
-    [SerializeField, Range(0f, 1f)] float phase2Threshold = 0.6f;
-    [SerializeField, Range(0f, 1f)] float phase3Threshold = 0.3f;
+    [Tooltip("Cada valor es el % de vida al que empieza la siguiente fase: 0.75 / 0.5 / 0.25 = 4 fases (100-75, 75-50, 50-25, 25-0).")]
+    [SerializeField] float[] phaseThresholds = { 0.75f, 0.5f, 0.25f };
 
     [Header("Movimiento")]
-    [SerializeField] float[] speedPerPhase = { 1.5f, 2.2f, 3f };
+    [SerializeField] float[] speedPerPhase = { 1.5f, 2f, 2.5f, 3f };
     [SerializeField] float stopDistance = 1.2f;
+
+    [Header("Embestida por fase (usa el ataque de EnemyContactDamage)")]
+    [Tooltip("Metros que se lanza hacia el jugador en cada fase: crece con las fases.")]
+    [SerializeField] float[] lungeDistancePerPhase = { 3.5f, 5f, 6.5f, 8f };
+    [Tooltip("Duracion de la embestida por fase: menos tiempo = mas rapida.")]
+    [SerializeField] float[] lungeTimePerPhase = { 0.3f, 0.3f, 0.28f, 0.26f };
+    [Tooltip("El ataque empieza a cargarse a esta fraccion de la distancia de embestida.")]
+    [SerializeField, Range(0.5f, 1f)] float lungeTriggerFraction = 0.85f;
     [SerializeField] float phaseChangePause = 1f;
 
     public int Phase { get; private set; } = 1;
@@ -43,7 +51,12 @@ public class BossLlorona : MonoBehaviour
         }
     }
 
-    void Start() => FindTarget();
+    void Start()
+    {
+        FindTarget();
+        ApplyLunge();
+        BossEncounter.Begin(gameObject);   // campo limpio y sin spawner: la fase 1 es el jefe solo
+    }
 
     void FindTarget()
     {
@@ -65,7 +78,9 @@ public class BossLlorona : MonoBehaviour
             return;
         }
 
-        int wanted = pct <= phase3Threshold ? 3 : pct <= phase2Threshold ? 2 : 1;
+        int wanted = 1;
+        for (int i = 0; i < phaseThresholds.Length; i++)
+            if (pct <= phaseThresholds[i]) wanted = i + 2;
         if (wanted > Phase) SetPhase(wanted);
     }
 
@@ -102,9 +117,20 @@ public class BossLlorona : MonoBehaviour
     void SetPhase(int p)
     {
         Phase = p;
+        ApplyLunge();
         pauseUntil = Time.time + phaseChangePause;
         OnPhaseChanged?.Invoke(p);
         Debug.Log($"[Llorona] Fase {p}");
+    }
+
+    void ApplyLunge()
+    {
+        if (contact == null || lungeDistancePerPhase.Length == 0 || lungeTimePerPhase.Length == 0) return;
+
+        float distance = lungeDistancePerPhase[Mathf.Clamp(Phase - 1, 0, lungeDistancePerPhase.Length - 1)];
+        float time = lungeTimePerPhase[Mathf.Clamp(Phase - 1, 0, lungeTimePerPhase.Length - 1)];
+        contact.SetLunge(distance, time);
+        contact.SetRange(distance * lungeTriggerFraction);
     }
 
     void Die()
@@ -112,6 +138,8 @@ public class BossLlorona : MonoBehaviour
         if (IsDead) return;
         IsDead = true;
         OnDefeated?.Invoke();
+        GameEvents.RaiseBossDefeated();
+        Debug.Log("[Llorona] Derrotada");
     }
 
     void OnDestroy()
@@ -121,4 +149,5 @@ public class BossLlorona : MonoBehaviour
 
     [ContextMenu("Probar: fase 2")] void TestPhase2() => SetPhase(2);
     [ContextMenu("Probar: fase 3")] void TestPhase3() => SetPhase(3);
+    [ContextMenu("Probar: fase 4")] void TestPhase4() => SetPhase(4);
 }

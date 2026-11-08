@@ -36,15 +36,15 @@ public class DifficultyDirector : MonoBehaviour
         }
     }
 
-    // Referencia: nivel ~6 a 1:10, ~10 a 3:00, ~14 a 5:15 (ver docs/08 - Progresion y balance).
-    // Despues del ultimo punto se mantienen los valores.
+    // El jefe aparece al nivel 18 (NightTimer.bossLevel); la curva termina ahi. Despues del ultimo punto se
+    // mantienen los valores. Ver docs/10 - Rondas, boss y puntaje.
     [SerializeField] private Point[] curve =
     {
         new Point(1f,  2.5f, 10, 1.0f, 1.0f, 1.00f),  // calentamiento
         new Point(6f,  1.8f, 14, 1.0f, 1.0f, 1.00f),
-        new Point(10f, 1.2f, 20, 1.6f, 1.0f, 1.15f),  // presion
-        new Point(14f, 0.7f, 30, 2.4f, 1.3f, 1.35f),  // escalada
-        new Point(15f, 0.7f, 30, 2.4f, 1.3f, 1.35f),  // ronda del boss
+        new Point(11f, 1.2f, 20, 1.6f, 1.0f, 1.15f),  // presion
+        new Point(16f, 0.7f, 26, 2.4f, 1.2f, 1.35f),  // escalada
+        new Point(18f, 0.7f, 26, 2.4f, 1.2f, 1.35f),  // ronda del boss
     };
 
     [Tooltip("Respaldo por tiempo: cada tantos segundos cuenta como una ronda extra aunque no se suba de nivel.")]

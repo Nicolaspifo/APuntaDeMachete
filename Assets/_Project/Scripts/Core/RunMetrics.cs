@@ -106,7 +106,9 @@ public class RunMetrics : MonoBehaviour
         foreach (var pair in EnemyContactDamage.WindupCount)
         {
             EnemyContactDamage.HitCount.TryGetValue(pair.Key, out int hits);
-            Debug.Log($"[Run]   {pair.Key}: {hits} golpes acertados de {pair.Value} ataques ({100f * hits / pair.Value:0}%)", this);
+            EnemyContactDamage.CancelledCount.TryGetValue(pair.Key, out int cancelled);
+            int resolved = Mathf.Max(1, pair.Value - cancelled);   // ataques que llegaron al golpe (sin los cancelados por muerte)
+            Debug.Log($"[Run]   {pair.Key}: {hits} golpes acertados de {pair.Value} ataques ({100f * hits / pair.Value:0}%) | cancelados al morir {cancelled} | acierto real {100f * hits / resolved:0}%", this);
         }
 
         minHealth = playerHealth != null ? playerHealth.Current : 0f; // el minimo se mide por intervalo
