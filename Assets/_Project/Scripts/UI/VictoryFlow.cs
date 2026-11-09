@@ -73,12 +73,21 @@ public class VictoryFlow : MonoBehaviour
         Time.timeScale = 1f;
         IsEndless = true;
 
-        // NUEVO: reactiva los spawners que se apagaron al aparecer el jefe,
-        // estén desactivados como objeto o solo como script.
+        // Reactiva los spawners que se apagaron al aparecer el jefe, esten desactivados como objeto o solo
+        // como script.
         foreach (var spawner in FindObjectsByType<EnemySpawner>(FindObjectsInactive.Include))
         {
             spawner.gameObject.SetActive(true);
             spawner.enabled = true;
+        }
+
+        // El director tambien se apaga durante la pelea del jefe (BossEncounter); sin reactivarlo, el modo
+        // infinito spawneaba enemigos pero con la dificultad congelada en x1 para siempre. IsEndless ya quedo
+        // en true arriba, asi que al reactivarse sigue escalando mas alla de la ultima ronda (ver DifficultyDirector).
+        foreach (var director in FindObjectsByType<DifficultyDirector>(FindObjectsInactive.Include))
+        {
+            director.gameObject.SetActive(true);
+            director.enabled = true;
         }
 
         foreach (var b in enableOnEndless)
