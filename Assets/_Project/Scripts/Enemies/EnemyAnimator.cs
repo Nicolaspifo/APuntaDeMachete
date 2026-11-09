@@ -1,12 +1,13 @@
 using UnityEngine;
 
 /// <summary>
-/// Alimenta el Animator de un enemigo (zancudo, hipopotamo...).
+/// Alimenta el Animator de un enemigo (zancudo, hipopotamo, Llorona...).
 ///
 /// Parametros que usa si existen en el Animator Controller (los que falten se ignoran):
 ///   MoveX, MoveY (float): diagonal hacia la que mira (-1 o 1 en cada eje).
 ///   Speed (float): 0 = quieto, 1 = caminando.
 ///   Attack (trigger): al empezar la carga del ataque (EnemyContactDamage.WindupStarted).
+///   Cry (trigger): al empezar el grito de La Llorona (CryAttack.CryStarted).
 ///   Die (trigger): cuando muere (Health.Died).
 ///
 /// El enemigo siempre mira hacia el jugador.
@@ -17,6 +18,8 @@ public class EnemyAnimator : MonoBehaviour
     [Header("Referencias (se buscan solas si se dejan vacias)")]
     [SerializeField] private EnemyContactDamage contact;
     [SerializeField] private Health health;
+    [SerializeField] private CryAttack cry;          // solo La Llorona
+    [SerializeField] private BossLlorona boss;       // solo La Llorona
 
     [Header("Direccion")]
     [Tooltip("Cuanto debe desviarse el jugador de la vertical u horizontal para cambiar de lado. Evita parpadeos.")]
@@ -32,6 +35,7 @@ public class EnemyAnimator : MonoBehaviour
     private static readonly int MoveYHash = Animator.StringToHash("MoveY");
     private static readonly int SpeedHash = Animator.StringToHash("Speed");
     private static readonly int AttackHash = Animator.StringToHash("Attack");
+    private static readonly int CryHash = Animator.StringToHash("Cry");
     private static readonly int DieHash = Animator.StringToHash("Die");
 
     private Animator animator;
@@ -44,6 +48,7 @@ public class EnemyAnimator : MonoBehaviour
 
     private bool hasSpeed;
     private bool hasAttack;
+    private bool hasCry;
     private bool hasDie;
 
     private void Awake()
@@ -51,6 +56,8 @@ public class EnemyAnimator : MonoBehaviour
         animator = GetComponent<Animator>();
         if (contact == null) contact = GetComponent<EnemyContactDamage>();
         if (health == null) health = GetComponent<Health>();
+        if (cry == null) cry = GetComponent<CryAttack>();
+        if (boss == null) boss = GetComponent<BossLlorona>();
 
         if (animator.runtimeAnimatorController == null)
         {
@@ -61,6 +68,7 @@ public class EnemyAnimator : MonoBehaviour
 
         hasSpeed = HasParameter(SpeedHash);
         hasAttack = HasParameter(AttackHash);
+        hasCry = HasParameter(CryHash);
         hasDie = HasParameter(DieHash);
     }
 
@@ -69,12 +77,14 @@ public class EnemyAnimator : MonoBehaviour
         lastPosition = transform.position;
 
         if (contact != null) contact.WindupStarted += OnWindupStarted;
+        if (cry != null) cry.CryStarted += OnCryStarted;
         if (health != null) health.Died += OnDied;
     }
 
     private void OnDisable()
     {
         if (contact != null) contact.WindupStarted -= OnWindupStarted;
+        if (cry != null) cry.CryStarted -= OnCryStarted;
         if (health != null) health.Died -= OnDied;
     }
 
@@ -90,11 +100,9 @@ public class EnemyAnimator : MonoBehaviour
         // En pausa (timeScale 0) no hay nada que actualizar.
         if (isDead || Time.deltaTime <= 0f) return;
 
-        // Mientras carga o se recupera de un golpe no cambia de lado: el golpe sale hacia donde apunto.
-        if (contact == null || !contact.IsBusy)
-        {
-            if (UpdateFacing()) ApplyFacing();
-        }
+        // Mientras carga un golpe o grita no cambia de lado: lo que hace sale hacia donde apunto.
+        bool busy = (contact != null && contact.IsBusy) || (boss != null && boss.MovementLocked);
+        if (!busy && UpdateFacing()) ApplyFacing();
 
         if (hasSpeed)
         {
@@ -117,6 +125,14 @@ public class EnemyAnimator : MonoBehaviour
         animator.SetTrigger(AttackHash);
     }
 
+    private void OnCryStarted()
+    {
+        if (isDead || !hasCry) return;
+
+        if (UpdateFacing()) ApplyFacing();
+        animator.SetTrigger(CryHash);
+    }
+
     private void OnDied()
     {
         if (isDead) return;
@@ -124,6 +140,7 @@ public class EnemyAnimator : MonoBehaviour
 
         if (hasSpeed) animator.SetFloat(SpeedHash, 0f);
         if (hasAttack) animator.ResetTrigger(AttackHash);
+        if (hasCry) animator.ResetTrigger(CryHash);
         if (hasDie) animator.SetTrigger(DieHash);
     }
 
