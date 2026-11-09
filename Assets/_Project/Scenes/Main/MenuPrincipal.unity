@@ -673,6 +673,7 @@ GameObject:
   - component: {fileID: 973212922}
   - component: {fileID: 973212921}
   - component: {fileID: 973212924}
+  - component: {fileID: 973212925}
   m_Layer: 5
   m_Name: PlayButton
   m_TagString: Untagged
@@ -808,6 +809,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SelectScaleEffect
   selectedScale: 1.1
   speed: 12
+--- !u!114 &973212925
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 973212919}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3e3a6643eec60bd4da594bb42caf8d46, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UIButtonSound
+  hoverClip: {fileID: 8300000, guid: 247a1a98979c39d4eabb674245c243ac, type: 3}
+  clickClip: {fileID: 8300000, guid: 58bf4fafa32857443b101b721c2b275e, type: 3}
 --- !u!1 &1441055308
 GameObject:
   m_ObjectHideFlags: 0
@@ -896,6 +911,7 @@ GameObject:
   - component: {fileID: 1450646572}
   - component: {fileID: 1450646571}
   - component: {fileID: 1450646574}
+  - component: {fileID: 1450646575}
   m_Layer: 5
   m_Name: Salir
   m_TagString: Untagged
@@ -1031,6 +1047,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SelectScaleEffect
   selectedScale: 1.1
   speed: 12
+--- !u!114 &1450646575
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1450646569}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3e3a6643eec60bd4da594bb42caf8d46, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UIButtonSound
+  hoverClip: {fileID: 8300000, guid: 247a1a98979c39d4eabb674245c243ac, type: 3}
+  clickClip: {fileID: 8300000, guid: 58bf4fafa32857443b101b721c2b275e, type: 3}
 --- !u!1 &1617637193
 GameObject:
   m_ObjectHideFlags: 0
