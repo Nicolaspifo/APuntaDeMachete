@@ -11,9 +11,7 @@ using UnityEngine;
 /// </summary>
 public static class EnemyAnimationGenerator
 {
-    private const int CellSize = 32;
-
-    // Orden de las 4 filas de cada animacion en la hoja (tus hojas: las filas de arriba van derecha, luego izquierda).
+    // Orden de las 4 filas de cada animacion en tus hojas.
     private static readonly string[] DirectionNames = { "DownLeft", "DownRight", "UpRight", "UpLeft" };
 
     // Posicion de cada direccion en el Blend Tree (MoveX, MoveY). Mismo orden que DirectionNames.
@@ -22,49 +20,60 @@ public static class EnemyAnimationGenerator
         new Vector2(-1f, -1f), new Vector2(1f, -1f), new Vector2(1f, 1f), new Vector2(-1f, 1f)
     };
 
+    /// <summary>
+    /// Idle: reposo (opcional). Move: caminar o volar, es el estado base.
+    /// Action: animacion que se dispara con un trigger del mismo nombre (Attack, Cry...).
+    /// Death: trigger "Die".
+    /// </summary>
+    private enum Role { Idle, Move, Action, Death }
+
     private class ClipSet
     {
         public readonly string name;
+        public readonly Role role;
         public readonly int firstRow;      // fila de la hoja donde empieza (0 = la de arriba)
         public readonly int frameCount;    // cuantos frames de esa fila se usan
         public readonly float fps;
-        public readonly bool loop;
         public AnimationClip[] clips;      // uno por direccion
 
-        public ClipSet(string name, int firstRow, int frameCount, float fps, bool loop)
+        public bool Loop => role == Role.Idle || role == Role.Move;
+
+        public ClipSet(string name, Role role, int firstRow, int frameCount, float fps)
         {
             this.name = name;
+            this.role = role;
             this.firstRow = firstRow;
             this.frameCount = frameCount;
             this.fps = fps;
-            this.loop = loop;
         }
     }
 
     [MenuItem("Tools/Enemigos/Zancudo - generar clips y controller")]
-    private static void GenerateZancudo()
+    private static void GenerateZancudo() => Generate("Zancudo", 32, new[]
     {
-        Generate("Zancudo", new[]
-        {
-            new ClipSet("Fly",    0, 4, 8f, true),
-            new ClipSet("Attack", 4, 5, 8f, false),
-            new ClipSet("Death",  8, 4, 8f, false),
-        }, idleName: null, moveName: "Fly");
-    }
+        new ClipSet("Fly",    Role.Move,   0, 4, 8f),
+        new ClipSet("Attack", Role.Action, 4, 5, 8f),
+        new ClipSet("Death",  Role.Death,  8, 4, 8f),
+    });
 
     [MenuItem("Tools/Enemigos/Hipopotamo - generar clips y controller")]
-    private static void GenerateHipopotamo()
+    private static void GenerateHipopotamo() => Generate("Hipopotamo", 32, new[]
     {
-        Generate("Hipopotamo", new[]
-        {
-            new ClipSet("Idle",   0, 1, 1f,  true),    // 1 solo frame: el primero de caminar
-            new ClipSet("Walk",   0, 8, 12f, true),
-            new ClipSet("Attack", 4, 6, 10f, false),
-            new ClipSet("Death",  8, 4, 8f,  false),
-        }, idleName: "Idle", moveName: "Walk");
-    }
+        new ClipSet("Idle",   Role.Idle,   0, 1, 1f),    // 1 solo frame: el primero de caminar
+        new ClipSet("Walk",   Role.Move,   0, 8, 12f),
+        new ClipSet("Attack", Role.Action, 4, 6, 10f),
+        new ClipSet("Death",  Role.Death,  8, 4, 8f),
+    });
 
-    private static void Generate(string enemyName, ClipSet[] sets, string idleName, string moveName)
+    [MenuItem("Tools/Enemigos/Llorona - generar clips y controller")]
+    private static void GenerateLlorona() => Generate("Llorona", 64, new[]
+    {
+        new ClipSet("Float", Role.Move,   0, 6, 8f),
+        new ClipSet("Cry",   Role.Action, 4, 7, 7f),     // 7 frames a 7 fps = 1 s, lo que dura el aviso del grito
+        new ClipSet("Death", Role.Death,  8, 3, 5f),
+    });
+
+    private static void Generate(string enemyName, int cellSize, ClipSet[] sets)
     {
         Texture2D sheet = GetSelectedSheet();
         if (sheet == null)
@@ -92,7 +101,7 @@ public static class EnemyAnimationGenerator
         // y los ordena de izquierda a derecha.
         int textureHeight = sheet.height;
         Dictionary<int, List<Sprite>> rows = sprites
-            .GroupBy(s => Mathf.FloorToInt((textureHeight - s.rect.center.y) / CellSize))
+            .GroupBy(s => Mathf.FloorToInt((textureHeight - s.rect.center.y) / cellSize))
             .ToDictionary(g => g.Key, g => g.OrderBy(s => s.rect.center.x).ToList());
 
         foreach (ClipSet set in sets)
@@ -107,17 +116,17 @@ public static class EnemyAnimationGenerator
                 {
                     int found = frames != null ? frames.Count : 0;
                     Debug.LogError($"[EnemyAnimationGenerator] La fila {row + 1} deberia tener al menos {set.frameCount} frames " +
-                                   $"para {set.name}, pero tiene {found}. Revisa el rebanado (32x32, Keep Empty Rects apagado).");
+                                   $"para {set.name}, pero tiene {found}. Revisa el rebanado ({cellSize}x{cellSize}, Keep Empty Rects apagado).");
                     return;
                 }
 
                 string clipPath = $"{clipsFolder}/{set.name}_{DirectionNames[d]}.anim";
-                set.clips[d] = BuildClip(clipPath, frames.Take(set.frameCount).ToList(), set.fps, set.loop);
+                set.clips[d] = BuildClip(clipPath, frames.Take(set.frameCount).ToList(), set.fps, set.Loop);
             }
         }
 
         AssetDatabase.SaveAssets();
-        BuildController($"{folder}/{enemyName}.controller", sets, idleName, moveName);
+        BuildController($"{folder}/{enemyName}.controller", sets);
         AssetDatabase.SaveAssets();
         AssetDatabase.Refresh();
 
@@ -160,7 +169,7 @@ public static class EnemyAnimationGenerator
         return clip;
     }
 
-    private static void BuildController(string path, ClipSet[] sets, string idleName, string moveName)
+    private static void BuildController(string path, ClipSet[] sets)
     {
         if (AssetDatabase.LoadAssetAtPath<AnimatorController>(path) != null)
         {
@@ -169,12 +178,17 @@ public static class EnemyAnimationGenerator
             return;
         }
 
+        ClipSet idle = sets.FirstOrDefault(s => s.role == Role.Idle);
+        ClipSet move = sets.First(s => s.role == Role.Move);
+        ClipSet death = sets.FirstOrDefault(s => s.role == Role.Death);
+        ClipSet[] actions = sets.Where(s => s.role == Role.Action).ToArray();
+
         AnimatorController controller = AnimatorController.CreateAnimatorControllerAtPath(path);
         controller.AddParameter("MoveX", AnimatorControllerParameterType.Float);
         controller.AddParameter("MoveY", AnimatorControllerParameterType.Float);
-        if (idleName != null) controller.AddParameter("Speed", AnimatorControllerParameterType.Float);
-        controller.AddParameter("Attack", AnimatorControllerParameterType.Trigger);
-        controller.AddParameter("Die", AnimatorControllerParameterType.Trigger);
+        if (idle != null) controller.AddParameter("Speed", AnimatorControllerParameterType.Float);
+        foreach (ClipSet action in actions) controller.AddParameter(action.name, AnimatorControllerParameterType.Trigger);
+        if (death != null) controller.AddParameter("Die", AnimatorControllerParameterType.Trigger);
 
         AnimatorStateMachine machine = controller.layers[0].stateMachine;
 
@@ -193,37 +207,43 @@ public static class EnemyAnimationGenerator
             states[set.name] = state;
         }
 
-        AnimatorState rest = states[idleName ?? moveName];
+        AnimatorState rest = states[(idle ?? move).name];
 
-        // Hipopotamo: Idle <-> Walk segun el parametro Speed.
-        if (idleName != null)
+        // Idle <-> Move segun el parametro Speed.
+        if (idle != null)
         {
-            AnimatorStateTransition toWalk = states[idleName].AddTransition(states[moveName]);
-            MakeInstant(toWalk);
-            toWalk.AddCondition(AnimatorConditionMode.Greater, 0.1f, "Speed");
+            AnimatorStateTransition toMove = states[idle.name].AddTransition(states[move.name]);
+            MakeInstant(toMove);
+            toMove.AddCondition(AnimatorConditionMode.Greater, 0.1f, "Speed");
 
-            AnimatorStateTransition toIdle = states[moveName].AddTransition(states[idleName]);
+            AnimatorStateTransition toIdle = states[move.name].AddTransition(states[idle.name]);
             MakeInstant(toIdle);
             toIdle.AddCondition(AnimatorConditionMode.Less, 0.1f, "Speed");
         }
 
-        // Cualquier estado -> Attack (trigger) y vuelve al terminar el clip.
-        AnimatorStateTransition anyToAttack = machine.AddAnyStateTransition(states["Attack"]);
-        MakeInstant(anyToAttack);
-        anyToAttack.canTransitionToSelf = false;
-        anyToAttack.AddCondition(AnimatorConditionMode.If, 0f, "Attack");
+        // Cada accion: cualquier estado -> accion (trigger con su nombre) y vuelve al terminar el clip.
+        foreach (ClipSet action in actions)
+        {
+            AnimatorStateTransition toAction = machine.AddAnyStateTransition(states[action.name]);
+            MakeInstant(toAction);
+            toAction.canTransitionToSelf = false;
+            toAction.AddCondition(AnimatorConditionMode.If, 0f, action.name);
 
-        AnimatorStateTransition attackEnd = states["Attack"].AddTransition(rest);
-        attackEnd.hasExitTime = true;
-        attackEnd.exitTime = 1f;
-        attackEnd.hasFixedDuration = true;
-        attackEnd.duration = 0f;
+            AnimatorStateTransition end = states[action.name].AddTransition(rest);
+            end.hasExitTime = true;
+            end.exitTime = 1f;
+            end.hasFixedDuration = true;
+            end.duration = 0f;
+        }
 
-        // Cualquier estado -> Death (trigger). De Death no se sale.
-        AnimatorStateTransition anyToDeath = machine.AddAnyStateTransition(states["Death"]);
-        MakeInstant(anyToDeath);
-        anyToDeath.canTransitionToSelf = false;
-        anyToDeath.AddCondition(AnimatorConditionMode.If, 0f, "Die");
+        // Cualquier estado -> Death (trigger Die). De Death no se sale.
+        if (death != null)
+        {
+            AnimatorStateTransition toDeath = machine.AddAnyStateTransition(states[death.name]);
+            MakeInstant(toDeath);
+            toDeath.canTransitionToSelf = false;
+            toDeath.AddCondition(AnimatorConditionMode.If, 0f, "Die");
+        }
 
         machine.defaultState = rest;
         EditorUtility.SetDirty(controller);

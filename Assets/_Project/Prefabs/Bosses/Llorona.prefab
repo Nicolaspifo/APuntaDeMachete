@@ -24,6 +24,8 @@ GameObject:
   - component: {fileID: 7100000000000000001}
   - component: {fileID: 7100000000000000002}
   - component: {fileID: 8100000000000000003}
+  - component: {fileID: 580041246171719336}
+  - component: {fileID: -1674830628895812204}
   m_Layer: 7
   m_Name: Llorona
   m_TagString: Untagged
@@ -96,7 +98,7 @@ SpriteRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
-  m_Color: {r: 0.5564759, g: 0, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -355,7 +357,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a48548c6aec5c6947975f53b7eeae864, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SfxEmitter
-  playOn: 1
+  playOn: 3
   clips:
   - {fileID: 8300000, guid: e61a4f3909123904fa6dea66e2276092, type: 3}
   volume: 1
@@ -457,3 +459,44 @@ MonoBehaviour:
   trailTime: 0.25
   dustInterval: 0.04
   dustSize: 0.35
+--- !u!95 &580041246171719336
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 536165718639125960}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: b32a36490595cdf40ad09f3658a7c316, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &-1674830628895812204
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 536165718639125960}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9861fd98a3e8f5f42acd48f4c2323f30, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyAnimator
+  contact: {fileID: 0}
+  health: {fileID: 0}
+  cry: {fileID: 0}
+  boss: {fileID: 0}
+  axisDeadZone: 0.25
+  walkThreshold: 0.3
+  walkHold: 0.1
