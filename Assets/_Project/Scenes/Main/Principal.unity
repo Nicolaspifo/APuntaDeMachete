@@ -8535,7 +8535,7 @@ AudioSource:
   m_PlayOnAwake: 1
   m_Volume: 0.2
   m_Pitch: 1
-  Loop: 0
+  Loop: 1
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
@@ -9956,6 +9956,13 @@ MonoBehaviour:
     speed: 1.38
   killsPerRound: 12
   secondsPerRoundFallback: 40
+  endlessHpGrowthPerRound: 0.12
+  endlessDamageGrowthPerRound: 0.04
+  endlessSpeedGrowthPerRound: 0.01
+  endlessIntervalDecreasePerRound: 0.015
+  endlessMinInterval: 0.4
+  endlessMaxAliveGrowthPerRound: 0.5
+  endlessMaxAliveCap: 60
   debugLog: 1
 --- !u!4 &1775845449
 Transform:
@@ -12431,66 +12438,6 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
---- !u!114 &8200000000000000001
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 247508560}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f7a9c1b3d5e24f0a8b6c3d9e1f2a4b6c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::RunClock
---- !u!114 &9100000000000000001
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 247508560}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b7e4c2a1d9f04e6a8c3b5d7e9f1a2b4c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::RunScore
-  pointsPerKill: 10
-  bossTimeReference: 360
-  pointsPerSecondSaved: 20
-  noDamageBonus: 4000
-  pointsPerDamageLost: 10
-  bossKillBonus: 5000
-  fightTimeReference: 120
-  pointsPerFightSecondSaved: 30
-  pointsPerLevelOnDeath: 100
-  debugLog: 1
---- !u!1660057539 &9223372036854775807
-SceneRoots:
-  m_ObjectHideFlags: 0
-  m_Roots:
-  - {fileID: 519420032}
-  - {fileID: 619394802}
-  - {fileID: 1567529663}
-  - {fileID: 2673926236299285906}
-  - {fileID: 4893701677296332902}
-  - {fileID: 1459681857}
-  - {fileID: 1153557725528183858}
-  - {fileID: 350953974}
-  - {fileID: 1574341478}
-  - {fileID: 1576245710}
-  - {fileID: 1197330632}
-  - {fileID: 2063678132}
-  - {fileID: 1607403629}
-  - {fileID: 608753637}
-  - {fileID: 1603911323}
-  - {fileID: 1594868515}
-  - {fileID: 1775845449}
-  - {fileID: 1245913992}
-  - {fileID: 125796387}
-  - {fileID: 2032853612}
-  - {fileID: 1665200385}
-  - {fileID: 1555747298}
 --- !u!1 &7500000000000000011
 GameObject:
   m_ObjectHideFlags: 0
@@ -12546,7 +12493,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -12556,7 +12503,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text:
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: a46c741505e3dab49b64392e979ac785, type: 2}
   m_sharedMaterial: {fileID: 7581214138045748185, guid: a46c741505e3dab49b64392e979ac785, type: 2}
@@ -12628,3 +12575,63 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &8200000000000000001
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 247508560}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f7a9c1b3d5e24f0a8b6c3d9e1f2a4b6c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RunClock
+--- !u!114 &9100000000000000001
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 247508560}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b7e4c2a1d9f04e6a8c3b5d7e9f1a2b4c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RunScore
+  pointsPerKill: 10
+  bossTimeReference: 360
+  pointsPerSecondSaved: 20
+  noDamageBonus: 4000
+  pointsPerDamageLost: 10
+  bossKillBonus: 5000
+  fightTimeReference: 120
+  pointsPerFightSecondSaved: 30
+  pointsPerLevelOnDeath: 100
+  debugLog: 1
+--- !u!1660057539 &9223372036854775807
+SceneRoots:
+  m_ObjectHideFlags: 0
+  m_Roots:
+  - {fileID: 519420032}
+  - {fileID: 619394802}
+  - {fileID: 1567529663}
+  - {fileID: 2673926236299285906}
+  - {fileID: 4893701677296332902}
+  - {fileID: 1459681857}
+  - {fileID: 1153557725528183858}
+  - {fileID: 350953974}
+  - {fileID: 1574341478}
+  - {fileID: 1576245710}
+  - {fileID: 1197330632}
+  - {fileID: 2063678132}
+  - {fileID: 1607403629}
+  - {fileID: 608753637}
+  - {fileID: 1603911323}
+  - {fileID: 1594868515}
+  - {fileID: 1775845449}
+  - {fileID: 1245913992}
+  - {fileID: 125796387}
+  - {fileID: 2032853612}
+  - {fileID: 1665200385}
+  - {fileID: 1555747298}
