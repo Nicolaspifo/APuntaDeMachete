@@ -269,8 +269,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ac3bbd6c1de9504ea4eca912481743b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyContactDamage
-  damage: 12.1
-  range: 2.23
+  damage: 12.3
+  range: 2.25
   cooldown: 2
   windup: 0.58
   recover: 0.6
@@ -335,8 +335,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CoffeeDropper
   coffeeBeanPrefab: {fileID: 5473035411711741365, guid: bddbb5f9a520ab84baf4794dd88f5e3f, type: 3}
   minDrops: 1
-  maxDrops: 3
+  maxDrops: 6
   scatterRadius: 0.5
+  dropOnHit: 0
 --- !u!61 &2892628272935405323
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -452,7 +453,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7011dd9c1398b9d418f9e9dba20c9cbc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyScaling
-  maxSpeedMultiplier: 1.2
+  maxSpeedMultiplier: 1.26
   debugLog: 0
 --- !u!95 &-459517512707792996
 Animator:

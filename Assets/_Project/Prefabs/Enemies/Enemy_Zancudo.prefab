@@ -226,6 +226,7 @@ MonoBehaviour:
   minDrops: 1
   maxDrops: 3
   scatterRadius: 0.5
+  dropOnHit: 0
 --- !u!61 &5460589273208176834
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -341,7 +342,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7011dd9c1398b9d418f9e9dba20c9cbc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyScaling
-  maxSpeedMultiplier: 1.35
+  maxSpeedMultiplier: 1.36
   debugLog: 0
 --- !u!95 &-1009876587309619728
 Animator:

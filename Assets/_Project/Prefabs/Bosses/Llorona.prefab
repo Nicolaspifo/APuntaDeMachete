@@ -117,7 +117,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1006f460344ff7c45a54d138ab0b6b35, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Health
-  maxHealth: 1000
+  maxHealth: 1300
   invulnerabilitySeconds: 0
 --- !u!114 &-7503720224500984395
 MonoBehaviour:
@@ -144,10 +144,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ac3bbd6c1de9504ea4eca912481743b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyContactDamage
-  damage: 15
-  range: 3
+  damage: 14
+  range: 3.05
   cooldown: 3.5
-  windup: 0.6
+  windup: 0.57
   recover: 0.6
   damageRadiusScale: 0.9
   lungeDistance: 1.5
@@ -249,8 +249,10 @@ MonoBehaviour:
   - 1.5
   - 2
   - 2.5
-  - 3
+  - 3.2
   stopDistance: 1.2
+  weaveAmplitude: 1.2
+  weaveFrequency: 0.6
   lungeDistancePerPhase:
   - 2.5
   - 3.5
@@ -290,7 +292,7 @@ MonoBehaviour:
   - 0.7
   - 0.6
   - 0.5
-  ringDamagePercent: 0.25
+  ringDamagePercent: 0.18
   firstCryDelay: 3
   attackHoldAfterCry: 2.5
   warningColor: {r: 1, g: 0.19999999, b: 0.6885592, a: 1}
@@ -334,8 +336,8 @@ MonoBehaviour:
       damageMultiplier: 1.8
     - prefab: {fileID: 9121166166713209676, guid: b201dc8c1b129a74a9ffad795b879bad, type: 3}
       count: 1
-      hpMultiplier: 4.5
-      damageMultiplier: 1.8
+      hpMultiplier: 5.04
+      damageMultiplier: 2
   spawnRadius: 3
   maxAlive: 4
   firstDelay: 4
@@ -413,10 +415,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::StunTileAttack
   tilesPerPhase: 00000000030000000400000006000000i
   tileSize: 2
-  warningTime: 1.2
+  warningTime: 1.1
   stunDuration: 1.2
   ringMargin: 1.2
-  scatter: 4
+  scatter: 4.12
   warningColor: {r: 1, g: 0.1, b: 0.2, a: 0.55}
 --- !u!114 &7100000000000000002
 MonoBehaviour:
@@ -432,6 +434,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CoffeeDropper
   coffeeBeanPrefab: {fileID: 5473035411711741365, guid: bddbb5f9a520ab84baf4794dd88f5e3f, type: 3}
   minDrops: 1
-  maxDrops: 3
+  maxDrops: 4
   scatterRadius: 0.5
   dropOnHit: 1
