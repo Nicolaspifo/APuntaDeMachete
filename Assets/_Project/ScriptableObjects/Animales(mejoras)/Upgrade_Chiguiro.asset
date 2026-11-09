@@ -15,7 +15,7 @@ MonoBehaviour:
   id: chuguiro
   displayName: "Chig\xFCiro"
   description: "Regeneraci\xF3n de la vida "
-  icon: {fileID: 3676275472638612809, guid: 8791ad580a52c5b4e83329c5a34333d0, type: 3}
+  icon: {fileID: -8187612883660303998, guid: 104d021cb1727aa4d85c4cc899522e32, type: 3}
   maxStacks: 3
   modifiers:
   - stat: 8
