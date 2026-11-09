@@ -81,7 +81,7 @@ public class RunMetrics : MonoBehaviour
 
     private void LogSummary()
     {
-        int alive = FindObjectsByType<EnemyContactDamage>(FindObjectsSortMode.None).Length;
+        int alive = FindObjectsByType<EnemyContactDamage>(FindObjectsInactive.Exclude).Length;
         int minutes = (int)(elapsed / 60f);
         int seconds = (int)(elapsed % 60f);
 
