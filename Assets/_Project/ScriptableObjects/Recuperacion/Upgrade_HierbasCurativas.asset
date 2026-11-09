@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: Upgrade_HierbasCurativas
   m_EditorClassIdentifier: Assembly-CSharp::UpgradeData
   id: hierbas_curativas
-  displayName: Hierbas Curativas
+  displayName: Aguapanela
   description: Recupera el 25% de la vida maxima
-  icon: {fileID: 0}
+  icon: {fileID: -6007857137893288414, guid: e982664149c8bc94488bbfbc6483b90b, type: 3}
   maxStacks: 1
   modifiers: []
   healPercent: 0.25
