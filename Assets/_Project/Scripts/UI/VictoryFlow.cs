@@ -1,4 +1,5 @@
 using System.Collections;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
@@ -10,6 +11,11 @@ public class VictoryFlow : MonoBehaviour
     [SerializeField] Health playerHealth;         // opcional: evita ganar si el jugador ya murió
     [SerializeField] float showDelay = 1.5f;
     [SerializeField] string menuSceneName = "MenuPrincipal";
+
+    [Header("Puntaje final")]
+    [Tooltip("Opcional: si se deja vacio, se busca solo en la escena.")]
+    [SerializeField] RunScore runScore;
+    [SerializeField] TMP_Text scoreText;
 
     [Header("Modo infinito")]
     [Tooltip("Opcional: otros scripts a reactivar al continuar. Los EnemySpawner se reactivan solos")]
@@ -23,6 +29,7 @@ public class VictoryFlow : MonoBehaviour
     {
         IsEndless = false;   // es estático: se reinicia al cargar la escena
         if (panel != null) panel.SetActive(false);
+        if (runScore == null) runScore = FindAnyObjectByType<RunScore>();
     }
 
     void OnEnable()  => GameEvents.BossDefeated += HandleDefeated;
@@ -46,6 +53,14 @@ public class VictoryFlow : MonoBehaviour
     void Show()
     {
         shown = true;
+
+        if (scoreText != null)
+        {
+            scoreText.text = runScore != null && runScore.Finished
+                ? $"{runScore.Score} pts · {RunClock.Format(runScore.FinalTime)}"
+                : "";
+        }
+
         panel.SetActive(true);
         Time.timeScale = 0f;
         EventSystem.current.SetSelectedGameObject(null);
