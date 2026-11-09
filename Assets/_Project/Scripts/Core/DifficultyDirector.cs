@@ -61,8 +61,8 @@ public class DifficultyDirector : MonoBehaviour
 
     public static DifficultyDirector Instance { get; private set; }
 
-    /// <summary>Segundos jugados. Usa Time.deltaTime: la pausa de las cartas no cuenta.</summary>
-    public float Elapsed { get; private set; }
+    /// <summary>Segundos jugados (fuente unica: <see cref="RunClock"/>).</summary>
+    public float Elapsed => RunClock.Instance != null ? RunClock.Instance.Elapsed : 0f;
     /// <summary>Progreso fraccionario sobre el que se evalua la curva: ronda + avance hacia la cuota de kills.</summary>
     public float Progress { get; private set; } = 1f;
     /// <summary>Ronda actual (numero entero).</summary>
@@ -84,7 +84,6 @@ public class DifficultyDirector : MonoBehaviour
     private void OnEnable()
     {
         Instance = this;
-        Elapsed = 0f;
         Round = 1;
         RoundKillCount = 0;
         Progress = 1f;
@@ -112,8 +111,6 @@ public class DifficultyDirector : MonoBehaviour
 
     private void Update()
     {
-        Elapsed += Time.deltaTime;
-
         // Respaldo por tiempo: si el jugador se estanca sin cumplir la cuota de kills, la ronda avanza igual.
         if (Round < MaxRound && Elapsed >= Round * secondsPerRoundFallback) AdvanceRound();
 

@@ -42,12 +42,14 @@ public class RunScore : MonoBehaviour
     public int Score { get; private set; }
     public bool Finished { get; private set; }
     public bool Won { get; private set; }
+    /// <summary>Duracion de la partida en el momento de terminar (muerte o victoria), lista para el reporte final.</summary>
+    public float FinalTime { get; private set; }
 
     private PlayerXP playerXP;
     private Health playerHealth;
     private NightTimer nightTimer;
 
-    private float elapsed;          // tiempo de partida (Time.deltaTime: la pausa no cuenta)
+    private float Elapsed => RunClock.Instance != null ? RunClock.Instance.Elapsed : 0f;   // fuente unica
     private float bossSpawnTime = -1f;
     private int kills;
     private float damageTaken;
@@ -92,11 +94,6 @@ public class RunScore : MonoBehaviour
         if (nightTimer != null) nightTimer.OnBossSpawned += OnBossSpawned;
     }
 
-    private void Update()
-    {
-        if (!Finished) elapsed += Time.deltaTime;
-    }
-
     private void OnEnemyKilled(GameObject enemy)
     {
         if (Finished) return;
@@ -113,15 +110,15 @@ public class RunScore : MonoBehaviour
 
     private void OnBossSpawned(GameObject boss)
     {
-        bossSpawnTime = elapsed;
+        bossSpawnTime = Elapsed;
     }
 
     private void OnBossDefeated()
     {
         if (Finished) return;
 
-        float bossTime = bossSpawnTime >= 0f ? bossSpawnTime : elapsed;
-        float fightTime = elapsed - bossTime;
+        float bossTime = bossSpawnTime >= 0f ? bossSpawnTime : Elapsed;
+        float fightTime = Elapsed - bossTime;
 
         int killPoints = kills * pointsPerKill;
         int speedPoints = Mathf.RoundToInt(Mathf.Max(0f, bossTimeReference - bossTime) * pointsPerSecondSaved);
@@ -131,7 +128,7 @@ public class RunScore : MonoBehaviour
         Score = killPoints + speedPoints + damagePoints + bossPoints;
         Finish(true);
 
-        Log($"[Puntaje] VICTORIA {Score} pts | kills {killPoints} | rapidez hasta el jefe +{speedPoints} (jefe a los {bossTime:0}s) | poco daño +{damagePoints} (daño {damageTaken:0}) | jefe +{bossPoints} (pelea {fightTime:0}s)");
+        Log($"[Puntaje] VICTORIA {Score} pts | tiempo {RunClock.Format(FinalTime)} | kills {killPoints} | rapidez hasta el jefe +{speedPoints} (jefe a los {bossTime:0}s) | poco daño +{damagePoints} (daño {damageTaken:0}) | jefe +{bossPoints} (pelea {fightTime:0}s)");
     }
 
     private void OnPlayerDied()
@@ -145,13 +142,14 @@ public class RunScore : MonoBehaviour
         Score = killPoints + levelPoints;
         Finish(false);
 
-        Log($"[Puntaje] DERROTA {Score} pts | kills {killPoints} | nivel {level} +{levelPoints} (sin bonos de victoria)");
+        Log($"[Puntaje] DERROTA {Score} pts | tiempo {RunClock.Format(FinalTime)} | kills {killPoints} | nivel {level} +{levelPoints} (sin bonos de victoria)");
     }
 
     private void Finish(bool won)
     {
         Finished = true;
         Won = won;
+        FinalTime = Elapsed;
         GameEvents.RaiseScoreChanged(Score);
     }
 

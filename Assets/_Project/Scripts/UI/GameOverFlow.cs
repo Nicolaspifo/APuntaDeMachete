@@ -77,7 +77,7 @@ public class GameOverFlow : MonoBehaviour
         if (scoreText != null)
         {
             scoreText.text = runScore != null && runScore.Finished
-                ? $"{(runScore.Won ? "VICTORIA" : "DERROTA")} · {runScore.Score} pts"
+                ? $"{(runScore.Won ? "VICTORIA" : "DERROTA")} · {runScore.Score} pts · {RunClock.Format(runScore.FinalTime)}"
                 : "";
         }
 
