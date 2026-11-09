@@ -7,8 +7,10 @@ public class CoffeeDropper : MonoBehaviour
     [SerializeField, Min(1)] private int minDrops = 1;
     [SerializeField, Min(1)] private int maxDrops = 3;
     [SerializeField, Min(0f)] private float scatterRadius = 0.5f;
-    [Tooltip("Si esta activo, suelta 1 grano cada vez que le aciertan, ademas de los de la muerte. Para el jefe: premia la agresividad.")]
+    [Tooltip("Si esta activo, suelta granos cada vez que le aciertan, ademas de los de la muerte. Para el jefe: premia la agresividad.")]
     [SerializeField] private bool dropOnHit = false;
+    [Tooltip("Granos que suelta por cada golpe recibido (solo si dropOnHit esta activo).")]
+    [SerializeField, Min(1)] private int hitDropAmount = 1;
 
     private Health health;
 
@@ -30,7 +32,7 @@ public class CoffeeDropper : MonoBehaviour
 
     private void DropOnHit(float current, float max)
     {
-        if (current > 0f) SpawnBeans(1);   // el golpe final no suma: lo cubren los granos de la muerte
+        if (current > 0f) SpawnBeans(hitDropAmount);   // el golpe final no suma: lo cubren los granos de la muerte
     }
 
     private void DropCoffee() => SpawnBeans(Random.Range(minDrops, maxDrops + 1));

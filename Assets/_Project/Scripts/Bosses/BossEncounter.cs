@@ -9,14 +9,14 @@ public static class BossEncounter
 {
     public static void Begin(GameObject boss)
     {
-        foreach (var spawner in Object.FindObjectsByType<EnemySpawner>(FindObjectsSortMode.None))
+        foreach (var spawner in Object.FindObjectsByType<EnemySpawner>(FindObjectsInactive.Exclude))
             spawner.enabled = false;
 
-        foreach (var director in Object.FindObjectsByType<DifficultyDirector>(FindObjectsSortMode.None))
+        foreach (var director in Object.FindObjectsByType<DifficultyDirector>(FindObjectsInactive.Exclude))
             director.enabled = false;   // al apagarse deja DifficultyScale en x1
 
         int cleared = 0;
-        foreach (var chase in Object.FindObjectsByType<EnemyChase>(FindObjectsSortMode.None))
+        foreach (var chase in Object.FindObjectsByType<EnemyChase>(FindObjectsInactive.Exclude))
         {
             if (chase.gameObject == boss) continue;
             Object.Destroy(chase.gameObject);   // sin loot ni EnemyKilled: no cuenta como kill ni da XP

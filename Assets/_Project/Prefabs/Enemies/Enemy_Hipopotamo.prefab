@@ -134,6 +134,7 @@ GameObject:
   - component: {fileID: -5284190136171905765}
   - component: {fileID: -459517512707792996}
   - component: {fileID: -3797464437226381696}
+  - component: {fileID: 8100000000000000002}
   m_Layer: 7
   m_Name: Enemy_Hipopotamo
   m_TagString: Untagged
@@ -494,3 +495,23 @@ MonoBehaviour:
   axisDeadZone: 0.25
   walkThreshold: 0.3
   walkHold: 0.1
+--- !u!114 &8100000000000000002
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9121166166713209676}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d8e2b7c4a1f04d6ab3c9e5f10a2b6c47, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyAttackVFX
+  color: {r: 0.55, g: 0.4, b: 0.25, a: 0.85}
+  particleSize: 0.4
+  particleSizeVariance: 0.1
+  windupBurstCount: 8
+  windupSpeed: 1
+  hitBurstCount: 20
+  hitSpeed: 3
+  hitGravity: 1.5
