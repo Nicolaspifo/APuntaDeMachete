@@ -15,7 +15,7 @@ MonoBehaviour:
   id: rana_dorada
   displayName: 'Rana Dorada '
   description: '+1 Veneno '
-  icon: {fileID: -1068534300636159287, guid: 8791ad580a52c5b4e83329c5a34333d0, type: 3}
+  icon: {fileID: -3136988060330278942, guid: 104d021cb1727aa4d85c4cc899522e32, type: 3}
   maxStacks: 3
   modifiers:
   - stat: 6
