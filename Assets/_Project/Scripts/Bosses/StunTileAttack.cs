@@ -12,9 +12,11 @@ public class StunTileAttack : MonoBehaviour
 {
     [Tooltip("Casillas por fase (fase 1 = 0, sin aturdimiento).")]
     [SerializeField] int[] tilesPerPhase = { 0, 3, 4, 6 };
-    [SerializeField, Min(0.5f)] float tileSize = 2f;
+    [SerializeField, Min(0.5f)] float tileSize = 2.6f;
     [Tooltip("Segundos de aviso de la casilla (se queda a la vista este tiempo antes de aturdir).")]
     [SerializeField, Min(0.2f)] float warningTime = 1.2f;
+    [Tooltip("Fraccion final del aviso en la que la casilla deja de seguir al jugador y queda fija (el telegrafo real: antes de esto persigue, lo justo para que sea posible acertar).")]
+    [SerializeField, Range(0.1f, 0.9f)] float lockFraction = 0.35f;
     [SerializeField, Min(0.1f)] float stunDuration = 1.2f;
     [Tooltip("Margen entre el borde del aro del canto y la casilla.")]
     [SerializeField, Min(0f)] float ringMargin = 1.2f;
@@ -25,7 +27,6 @@ public class StunTileAttack : MonoBehaviour
     BossLlorona boss;
     CryAttack cry;
     Transform player;
-    Rigidbody2D playerBody;
     Stunnable stunnable;
     Sprite square;
 
@@ -57,7 +58,6 @@ public class StunTileAttack : MonoBehaviour
         if (p == null) return;
 
         player = p.transform;
-        p.TryGetComponent(out playerBody);
         if (!p.TryGetComponent(out stunnable)) stunnable = p.AddComponent<Stunnable>();   // el estuneo no requiere montaje manual
     }
 
@@ -68,17 +68,19 @@ public class StunTileAttack : MonoBehaviour
         if (player == null) return;
 
         int count = tilesPerPhase[Mathf.Clamp(boss.Phase - 1, 0, tilesPerPhase.Length - 1)];
-        for (int i = 0; i < count; i++) StartCoroutine(Tile(PickPosition(i)));
+        for (int i = 0; i < count; i++)
+        {
+            // La primera casilla sigue justo al jugador (offset 0); las demas, repartidas a su alrededor.
+            Vector2 offset = i == 0 ? Vector2.zero : Random.insideUnitCircle * scatter;
+            StartCoroutine(Tile(offset));
+        }
     }
 
-    Vector2 PickPosition(int index)
+    // Posicion deseada ahora mismo: jugador + offset, empujada fuera del aro si cae dentro.
+    Vector2 ComputePosition(Vector2 offset)
     {
-        Vector2 center = player.position;
-        // La primera casilla cae donde estara el jugador si huye en linea recta; las demas, repartidas a su alrededor.
-        if (index == 0 && playerBody != null) center += playerBody.linearVelocity * cry.WarningTime;
-        else center += Random.insideUnitCircle * scatter;
+        Vector2 center = (Vector2)player.position + offset;
 
-        // Siempre fuera del aro: si cae dentro, se empuja hacia fuera.
         Vector2 bossPos = transform.position;
         Vector2 away = center - bossPos;
         float minDistance = cry.Radius + ringMargin + tileSize * 0.5f;
@@ -87,17 +89,28 @@ public class StunTileAttack : MonoBehaviour
         return center;
     }
 
-    IEnumerator Tile(Vector2 pos)
+    // La casilla persigue al jugador (con su offset) durante la primera parte del aviso, y se congela en la
+    // ultima fraccion (lockFraction): asi el telegrafo final es real y acertable, no una prediccion que ya no
+    // vale apenas el jugador cambia de direccion.
+    IEnumerator Tile(Vector2 offset)
     {
         var go = new GameObject("StunTile");
+        Vector2 pos = ComputePosition(offset);
         go.transform.position = pos;
         go.transform.localScale = new Vector3(tileSize, tileSize, 1f);
         var sr = go.AddComponent<SpriteRenderer>();
         sr.sprite = square;
         sr.sortingOrder = 5;
 
+        float lockTime = warningTime * (1f - lockFraction);
         for (float t = 0f; t < warningTime; t += Time.deltaTime)
         {
+            if (t < lockTime && player != null)
+            {
+                pos = ComputePosition(offset);
+                go.transform.position = pos;
+            }
+
             float alpha = Mathf.Lerp(0.25f, warningColor.a, Mathf.PingPong(t * 6f, 1f));
             sr.color = new Color(warningColor.r, warningColor.g, warningColor.b, alpha);
             yield return null;

@@ -77,6 +77,8 @@ public class CryAttack : MonoBehaviour
 
         CryStarted?.Invoke();
 
+        StartCoroutine(RippleWaves(radius, warningTime));   // ondas viajeras, decorativas (como piedras en un estanque)
+
         ring.enabled = true;
         for (float t = 0f; t < warningTime; t += Time.deltaTime)
         {
@@ -104,14 +106,56 @@ public class CryAttack : MonoBehaviour
         crying = false;
     }
 
-    void Draw(float radius)
+    void Draw(float radius) => DrawOn(ring, radius);
+
+    void DrawOn(LineRenderer line, float radius)
     {
         Vector3 c = transform.position;
         for (int i = 0; i < Segments; i++)
         {
             float a = i * Mathf.PI * 2f / Segments;
-            ring.SetPosition(i, c + new Vector3(Mathf.Cos(a), Mathf.Sin(a), 0f) * radius);
+            line.SetPosition(i, c + new Vector3(Mathf.Cos(a), Mathf.Sin(a), 0f) * radius);
         }
+    }
+
+    // Ondas que viajan desde el centro hacia el radio de aviso, como piedras cayendo en un estanque: puramente
+    // decorativo, no cambia el radio ni el daño del canto.
+    IEnumerator RippleWaves(float maxRadius, float duration)
+    {
+        const int waveCount = 3;
+        float interval = duration / waveCount;
+        for (int i = 0; i < waveCount; i++)
+        {
+            StartCoroutine(Ripple(maxRadius, Mathf.Min(0.6f, duration)));
+            yield return new WaitForSeconds(interval);
+        }
+    }
+
+    IEnumerator Ripple(float maxRadius, float rippleDuration)
+    {
+        var go = new GameObject("CryRipple");
+        go.transform.SetParent(transform, false);
+        var line = go.AddComponent<LineRenderer>();
+        line.useWorldSpace = true;
+        line.loop = true;
+        line.positionCount = Segments;
+        line.widthMultiplier = 0.08f;
+        line.sortingOrder = 49;
+        line.material = ring.material;
+
+        for (float t = 0f; t < rippleDuration; t += Time.deltaTime)
+        {
+            float k = t / rippleDuration;
+            float r = Mathf.Lerp(maxRadius * 0.15f, maxRadius, k);
+            float alpha = (1f - k) * 0.8f;
+            Color c = new Color(warningColor.r, warningColor.g, warningColor.b, alpha);
+            line.startColor = c;
+            line.endColor = c;
+            DrawOn(line, r);
+            yield return null;
+        }
+
+        Destroy(go);
     }
 
     float Pick(float[] values) => values[Mathf.Clamp(boss.Phase - 1, 0, values.Length - 1)];

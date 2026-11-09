@@ -44,6 +44,10 @@ public class EnemyContactDamage : MonoBehaviour
     public event Action<float> WindupStarted;
     /// <summary>Se dispara cuando el golpe conecta.</summary>
     public event Action Attacked;
+    /// <summary>Empieza la embestida (fin del windup, con embestida activa). Para VFX: estela, polvo...</summary>
+    public event Action LungeStarted;
+    /// <summary>Termina la embestida, haya golpeado o fallado (justo antes de Recover).</summary>
+    public event Action LungeEnded;
 
     // Contadores por tipo de enemigo (ataques iniciados / golpes que conectaron), para medir en RunMetrics.
     public static readonly Dictionary<string, int> WindupCount = new();
@@ -76,6 +80,9 @@ public class EnemyContactDamage : MonoBehaviour
 
     public float Range => range;
     public float Windup => windup;
+    /// <summary>Direccion fijada de la embestida (valida desde que empieza el windup).</summary>
+    public Vector2 LungeDirection => lungeDir;
+    public float LungeDistance => lungeDistance;
     /// <summary>True mientras carga o se recupera: el enemigo no debe moverse.</summary>
     public bool IsBusy => state != State.Idle;
 
@@ -188,6 +195,7 @@ public class EnemyContactDamage : MonoBehaviour
             state = State.Lunge;
             stateEndTime = Time.time + lungeTime;
             lungeHit = false;
+            LungeStarted?.Invoke();
             return;
         }
 
@@ -222,10 +230,14 @@ public class EnemyContactDamage : MonoBehaviour
 
     private void BeginRecover()
     {
+        bool wasLunging = state == State.Lunge;
+
         nextHitTime = Time.time + cooldown;
         state = State.Recover;
         stateEndTime = Time.time + recover;
         AttackTokens.Release(this);
+
+        if (wasLunging) LungeEnded?.Invoke();
     }
 
     private void Finish()

@@ -23,6 +23,7 @@ GameObject:
   - component: {fileID: -2087920910820921698}
   - component: {fileID: 7100000000000000001}
   - component: {fileID: 7100000000000000002}
+  - component: {fileID: 8100000000000000003}
   m_Layer: 7
   m_Name: Llorona
   m_TagString: Untagged
@@ -437,3 +438,21 @@ MonoBehaviour:
   maxDrops: 4
   scatterRadius: 0.5
   dropOnHit: 1
+  hitDropAmount: 2
+--- !u!114 &8100000000000000003
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 536165718639125960}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1f3c5a7b9d24e6fa0c2d4e6f8a0b2c5, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::BossLungeVFX
+  aimColor: {r: 1, g: 0.7, b: 0.1, a: 0.85}
+  trailColor: {r: 1, g: 0.85, b: 0.4, a: 0.55}
+  trailTime: 0.25
+  dustInterval: 0.04
+  dustSize: 0.35
