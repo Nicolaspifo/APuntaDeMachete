@@ -28,6 +28,8 @@ public class GameOverFlow : MonoBehaviour
 
     void Awake()
     {
+        Time.timeScale = 1f;   // empezar siempre en 1, sin importar como se cerro la partida anterior
+
         if (runScore == null) runScore = FindAnyObjectByType<RunScore>();
 
         if ((disableOnDeath == null || disableOnDeath.Length == 0) && playerHealth != null)
@@ -50,6 +52,7 @@ public class GameOverFlow : MonoBehaviour
 
     void OnDestroy()
     {
+        Time.timeScale = 1f;   // al salir de la escena o parar el Play, nunca dejar el 0
         if (playerHealth != null) playerHealth.Died -= OnPlayerDied;
     }
 
@@ -101,6 +104,7 @@ public class GameOverFlow : MonoBehaviour
 
     public void Quit()
     {
+        Time.timeScale = 1f;
 #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;
 #else

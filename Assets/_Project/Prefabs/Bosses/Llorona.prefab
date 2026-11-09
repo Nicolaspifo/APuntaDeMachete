@@ -118,7 +118,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1006f460344ff7c45a54d138ab0b6b35, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Health
-  maxHealth: 1300
+  maxHealth: 1000
   invulnerabilitySeconds: 0
 --- !u!114 &-7503720224500984395
 MonoBehaviour:
@@ -417,6 +417,7 @@ MonoBehaviour:
   tilesPerPhase: 00000000030000000400000006000000i
   tileSize: 2
   warningTime: 1.1
+  lockFraction: 0.35
   stunDuration: 1.2
   ringMargin: 1.2
   scatter: 4.12
@@ -449,7 +450,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e1f3c5a7b9d24e6fa0c2d4e6f8a0b2c5, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BossLungeVFX
   aimColor: {r: 1, g: 0.7, b: 0.1, a: 0.85}
   trailColor: {r: 1, g: 0.85, b: 0.4, a: 0.55}

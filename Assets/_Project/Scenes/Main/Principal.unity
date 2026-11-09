@@ -1408,7 +1408,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 247909506}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 2032853611}
+        m_TargetAssemblyTypeName: VictoryFlow, Assembly-CSharp
+        m_MethodName: Restart
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &247909506
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5213,7 +5225,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 760044687}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 2032853611}
+        m_TargetAssemblyTypeName: VictoryFlow, Assembly-CSharp
+        m_MethodName: GoToMenu
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &760044687
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8093,7 +8117,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1464889384}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 2032853611}
+        m_TargetAssemblyTypeName: VictoryFlow, Assembly-CSharp
+        m_MethodName: ContinueEndless
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1464889384
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9271,6 +9307,50 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1623611428}
   m_CullTransparentMesh: 1
+--- !u!1 &1665200383
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1665200385}
+  - component: {fileID: 1665200384}
+  m_Layer: 0
+  m_Name: Observar
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1665200384
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1665200383}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 02efd8a580b1253428b79739a642333b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
+--- !u!4 &1665200385
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1665200383}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 321.59366, y: 323.14917, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1719934010
 GameObject:
   m_ObjectHideFlags: 0
@@ -11187,6 +11267,8 @@ MonoBehaviour:
   playerHealth: {fileID: 1567529667}
   showDelay: 1.5
   menuSceneName: MenuPrincipal
+  runScore: {fileID: 0}
+  scoreText: {fileID: 0}
   enableOnEndless: []
 --- !u!4 &2032853612
 Transform:
@@ -12015,6 +12097,18 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &8200000000000000001
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 247508560}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f7a9c1b3d5e24f0a8b6c3d9e1f2a4b6c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RunClock
 --- !u!114 &9100000000000000001
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12061,15 +12155,4 @@ SceneRoots:
   - {fileID: 1245913992}
   - {fileID: 125796387}
   - {fileID: 2032853612}
---- !u!114 &8200000000000000001
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 247508560}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f7a9c1b3d5e24f0a8b6c3d9e1f2a4b6c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::RunClock
+  - {fileID: 1665200385}
