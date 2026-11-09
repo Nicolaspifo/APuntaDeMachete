@@ -50,6 +50,10 @@ public static class ProceduralSprites
         go.transform.SetParent(parent, false);
         ParticleSystem ps = go.AddComponent<ParticleSystem>();
 
+        // AddComponent<ParticleSystem> lo deja reproduciendo (playOnAwake por defecto); hay que pararlo antes de
+        // tocar "main" (p.ej. duration), que Unity no permite modificar mientras esta en marcha.
+        ps.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+
         ParticleSystem.MainModule main = ps.main;
         main.loop = false;
         main.playOnAwake = false;
