@@ -20,10 +20,46 @@ public class MacheteAttack : MonoBehaviour
     [SerializeField] private bool debugLog = false;
 
     public float Damage { get => damage; set => damage = Mathf.Max(0f, value); }
-    public float Cooldown { get => cooldown; set => cooldown = Mathf.Max(0.1f, value); }
+    public float Cooldown
+    {
+        get => cooldown;
+        set
+        {
+            float newCooldown = Mathf.Max(0.1f, value);
+
+            // PlayerRuntimeStats escribe este valor cada vez que aplicas una mejora,
+            // aunque no cambie. Si es el mismo, no tocamos el ciclo en curso.
+            if (Mathf.Approximately(newCooldown, cooldown)) return;
+
+            if (Time.time < nextAttackTime && cooldown > 0f)
+            {
+                // 0 = acaba de golpear, 1 = listo para el siguiente golpe.
+                float progress = Mathf.Clamp01(1f - (nextAttackTime - Time.time) / cooldown);
+
+                cooldown = newCooldown;
+                nextAttackTime = Time.time + (1f - progress) * newCooldown;
+            }
+            else
+            {
+                cooldown = newCooldown;
+            }
+        }
+    }
     public float Range { get => range; set => range = Mathf.Max(0.1f, value); }
     /// <summary>Apertura total del arco de golpe, en grados.</summary>
     public float Angle => angle;
+    public float CooldownProgress
+    {
+        get
+        {
+            if (Time.time >= nextAttackTime)
+                return 1f;
+
+            float remaining = nextAttackTime - Time.time;
+
+            return Mathf.Clamp01(1f - remaining / cooldown);
+        }
+    }
 
     public event Action<Vector2> Attacked;
     public event Action<GameObject> Hit;
