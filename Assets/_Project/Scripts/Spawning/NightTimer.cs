@@ -98,9 +98,10 @@ public class NightTimer : MonoBehaviour
     {
         if (label == null) return;
 
-        // El HUD muestra el avance por rondas reales (hay que pelear), no por nivel del jugador.
+        // El HUD muestra el avance por rondas reales (hay que pelear), no por nivel del jugador, mas el reloj.
         DifficultyDirector director = DifficultyDirector.Instance;
         int round = director != null ? director.Round : 1;
-        label.text = BossSpawned ? "¡LA LLORONA!" : $"RONDA {round}/{bossRound}";
+        string clock = RunClock.Instance != null ? RunClock.Instance.Formatted : "00:00";
+        label.text = BossSpawned ? "¡LA LLORONA!" : $"RONDA {round}/{bossRound} · {clock}";
     }
 }

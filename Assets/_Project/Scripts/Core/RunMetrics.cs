@@ -11,7 +11,7 @@ public class RunMetrics : MonoBehaviour
     [SerializeField] private PlayerRuntimeStats stats;
     [SerializeField, Min(5f)] private float logInterval = 30f;
 
-    private float elapsed;      // tiempo de partida; usa Time.deltaTime, asi la pausa de las cartas no cuenta
+    private float Elapsed => RunClock.Instance != null ? RunClock.Instance.Elapsed : 0f;   // fuente unica
     private float nextLog;
     private int kills;
     private float minHealth;
@@ -53,13 +53,12 @@ public class RunMetrics : MonoBehaviour
     private void OnBossSpawned(GameObject boss)
     {
         string level = playerXP != null ? playerXP.Level.ToString() : "?";
-        Debug.Log($"[Run] ¡Aparecio el jefe a los {elapsed:0}s ({(int)(elapsed / 60f):00}:{(int)(elapsed % 60f):00}) con el jugador en nivel {level}! | kills {kills} | dano recibido {damageTaken:0}", this);
+        Debug.Log($"[Run] ¡Aparecio el jefe a los {Elapsed:0}s ({RunClock.Format(Elapsed)}) con el jugador en nivel {level}! | kills {kills} | dano recibido {damageTaken:0}", this);
     }
 
     private void Update()
     {
-        elapsed += Time.deltaTime;
-        if (elapsed < nextLog) return;
+        if (Elapsed < nextLog) return;
 
         nextLog += logInterval;
         LogSummary();
@@ -69,7 +68,7 @@ public class RunMetrics : MonoBehaviour
 
     private void OnLevelUp(int level)
     {
-        if (firstLevelTime < 0f) firstLevelTime = elapsed;
+        if (firstLevelTime < 0f) firstLevelTime = Elapsed;
     }
 
     private void OnHealthChanged(float current, float max)
@@ -82,8 +81,8 @@ public class RunMetrics : MonoBehaviour
     private void LogSummary()
     {
         int alive = FindObjectsByType<EnemyContactDamage>(FindObjectsInactive.Exclude).Length;
-        int minutes = (int)(elapsed / 60f);
-        int seconds = (int)(elapsed % 60f);
+        int minutes = (int)(Elapsed / 60f);
+        int seconds = (int)(Elapsed % 60f);
 
         string level = playerXP != null ? playerXP.Level.ToString() : "?";
         string hp = playerHealth != null ? $"{playerHealth.Current:0}/{playerHealth.Max:0} (min {minHealth:0})" : "?";

@@ -1286,6 +1286,7 @@ GameObject:
   - component: {fileID: 247508562}
   - component: {fileID: 247508561}
   - component: {fileID: 9100000000000000001}
+  - component: {fileID: 8200000000000000001}
   m_Layer: 0
   m_Name: RunMetrics
   m_TagString: Untagged
@@ -12059,3 +12060,15 @@ SceneRoots:
   - {fileID: 1245913992}
   - {fileID: 125796387}
   - {fileID: 2032853612}
+--- !u!114 &8200000000000000001
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 247508560}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f7a9c1b3d5e24f0a8b6c3d9e1f2a4b6c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RunClock
