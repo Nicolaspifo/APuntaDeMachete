@@ -56,6 +56,20 @@ public class DifficultyDirector : MonoBehaviour
     [Tooltip("Respaldo por tiempo: si se supera ronda x este valor en segundos, la ronda avanza igual aunque falten kills.")]
     [SerializeField, Min(5f)] private float secondsPerRoundFallback = 40f;
 
+    [Header("Modo infinito (mas alla de la ultima ronda)")]
+    [Tooltip("Cuanto sube la vida de los enemigos por cada ronda extra, una vez pasada la ultima ronda de la curva.")]
+    [SerializeField, Min(0f)] private float endlessHpGrowthPerRound = 0.12f;
+    [Tooltip("Cuanto sube el daño por cada ronda extra.")]
+    [SerializeField, Min(0f)] private float endlessDamageGrowthPerRound = 0.04f;
+    [Tooltip("Cuanto sube la velocidad por cada ronda extra (cada enemigo igual tiene su propio tope en EnemyScaling).")]
+    [SerializeField, Min(0f)] private float endlessSpeedGrowthPerRound = 0.01f;
+    [Tooltip("Cuanto baja el intervalo de aparicion por cada ronda extra.")]
+    [SerializeField, Min(0f)] private float endlessIntervalDecreasePerRound = 0.015f;
+    [SerializeField, Min(0.1f)] private float endlessMinInterval = 0.4f;
+    [Tooltip("Cuantos enemigos vivos mas se permiten por cada ronda extra.")]
+    [SerializeField, Min(0f)] private float endlessMaxAliveGrowthPerRound = 0.5f;
+    [SerializeField, Min(1)] private int endlessMaxAliveCap = 60;
+
     [Header("Depuracion")]
     [SerializeField] private bool debugLog = false;
 
@@ -80,16 +94,24 @@ public class DifficultyDirector : MonoBehaviour
 
     private float nextLog;
     private int lastAdvanceFrame = -1;
+    private bool initialized;
 
     private void OnEnable()
     {
         Instance = this;
-        Round = 1;
-        RoundKillCount = 0;
-        Progress = 1f;
         MaxRound = curve != null && curve.Length > 0 ? Mathf.Max(1, Mathf.RoundToInt(curve[curve.Length - 1].round)) : 1;
-        Evaluate(1f);
 
+        // Solo se reinicia la primera vez: BossEncounter apaga este componente durante la pelea del jefe y
+        // VictoryFlow lo reactiva en el modo infinito; ahi debe seguir desde donde iba, no volver a la ronda 1.
+        if (!initialized)
+        {
+            initialized = true;
+            Round = 1;
+            RoundKillCount = 0;
+            Progress = 1f;
+        }
+
+        Evaluate(Progress);
         GameEvents.EnemyKilled += OnEnemyKilled;
     }
 
@@ -100,10 +122,14 @@ public class DifficultyDirector : MonoBehaviour
         DifficultyScale.Hp = DifficultyScale.Damage = DifficultyScale.Speed = 1f;
     }
 
+    // En el modo infinito las rondas siguen subiendo mas alla de MaxRound (la del jefe), para que la partida
+    // despues de ganar siga poniendose mas dificil en vez de quedarse plana.
+    private bool CanAdvance => Round < MaxRound || VictoryFlow.IsEndless;
+
     // Cada kill cuenta para la cuota de la ronda actual: asi hay que pelear de verdad, no solo subir de nivel.
     private void OnEnemyKilled(GameObject enemy)
     {
-        if (Round >= MaxRound) return;
+        if (!CanAdvance) return;
 
         RoundKillCount++;
         if (RoundKillCount >= killsPerRound) AdvanceRound();
@@ -112,15 +138,16 @@ public class DifficultyDirector : MonoBehaviour
     private void Update()
     {
         // Respaldo por tiempo: si el jugador se estanca sin cumplir la cuota de kills, la ronda avanza igual.
-        if (Round < MaxRound && Elapsed >= Round * secondsPerRoundFallback) AdvanceRound();
+        if (CanAdvance && Elapsed >= Round * secondsPerRoundFallback) AdvanceRound();
 
-        Progress = Round + (Round < MaxRound ? Mathf.Clamp01(RoundKillCount / (float)killsPerRound) : 0f);
+        Progress = Round + (CanAdvance ? Mathf.Clamp01(RoundKillCount / (float)killsPerRound) : 0f);
         Evaluate(Progress);
 
         if (debugLog && Elapsed >= nextLog)
         {
             nextLog = Elapsed + 15f;
-            Debug.Log($"[Director {Elapsed:0}s] ronda {Round}/{MaxRound} | kills {RoundKillCount}/{killsPerRound} | intervalo {SpawnInterval:0.00} | maxVivos {MaxAlive} | vida x{DifficultyScale.Hp:0.00} | dano x{DifficultyScale.Damage:0.00} | velocidad x{DifficultyScale.Speed:0.00}", this);
+            string roundLabel = VictoryFlow.IsEndless ? $"ronda {Round} (infinito)" : $"ronda {Round}/{MaxRound}";
+            Debug.Log($"[Director {Elapsed:0}s] {roundLabel} | kills {RoundKillCount}/{killsPerRound} | intervalo {SpawnInterval:0.00} | maxVivos {MaxAlive} | vida x{DifficultyScale.Hp:0.00} | dano x{DifficultyScale.Damage:0.00} | velocidad x{DifficultyScale.Speed:0.00}", this);
         }
     }
 
@@ -130,7 +157,7 @@ public class DifficultyDirector : MonoBehaviour
         if (Time.frameCount == lastAdvanceFrame) return;
         lastAdvanceFrame = Time.frameCount;
 
-        Round = Mathf.Min(Round + 1, MaxRound);
+        Round = VictoryFlow.IsEndless ? Round + 1 : Mathf.Min(Round + 1, MaxRound);
         RoundKillCount = 0;
         RoundChanged?.Invoke(Round);
     }
@@ -160,5 +187,18 @@ public class DifficultyDirector : MonoBehaviour
         DifficultyScale.Hp = Mathf.Lerp(a.hp, b.hp, k);
         DifficultyScale.Damage = Mathf.Lerp(a.damage, b.damage, k);
         DifficultyScale.Speed = Mathf.Lerp(a.speed, b.speed, k);
+
+        // Modo infinito: mas alla de la ultima ronda de la curva, se sigue endureciendo poco a poco en vez de
+        // quedarse plano para siempre. Usa tasas propias (no la pendiente del ultimo tramo, que puede ser 0).
+        Point last = curve[curve.Length - 1];
+        float extraRounds = progress - last.round;
+        if (extraRounds > 0f)
+        {
+            SpawnInterval = Mathf.Max(endlessMinInterval, last.spawnInterval - extraRounds * endlessIntervalDecreasePerRound);
+            MaxAlive = Mathf.Min(endlessMaxAliveCap, Mathf.RoundToInt(last.maxAlive + extraRounds * endlessMaxAliveGrowthPerRound));
+            DifficultyScale.Hp = last.hp + extraRounds * endlessHpGrowthPerRound;
+            DifficultyScale.Damage = last.damage + extraRounds * endlessDamageGrowthPerRound;
+            DifficultyScale.Speed = last.speed + extraRounds * endlessSpeedGrowthPerRound;
+        }
     }
 }

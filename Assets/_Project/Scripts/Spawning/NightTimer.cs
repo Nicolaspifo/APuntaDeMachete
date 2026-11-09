@@ -42,7 +42,11 @@ public class NightTimer : MonoBehaviour
 
     void Update()
     {
-        if (BossSpawned) return;
+        if (BossSpawned)
+        {
+            UpdateLabel();   // el reloj del HUD sigue avanzando en la pelea (y despues, en el modo infinito)
+            return;
+        }
 
         Remaining = Mathf.Max(0f, Remaining - Time.deltaTime);
         UpdateLabel();
@@ -102,6 +106,6 @@ public class NightTimer : MonoBehaviour
         DifficultyDirector director = DifficultyDirector.Instance;
         int round = director != null ? director.Round : 1;
         string clock = RunClock.Instance != null ? RunClock.Instance.Formatted : "00:00";
-        label.text = BossSpawned ? "¡LA LLORONA!" : $"RONDA {round}/{bossRound} · {clock}";
+        label.text = BossSpawned ? $"¡LA LLORONA! · {clock}" : $"RONDA {round}/{bossRound} · {clock}";
     }
 }
