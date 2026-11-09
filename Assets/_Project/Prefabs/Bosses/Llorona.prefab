@@ -147,14 +147,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ac3bbd6c1de9504ea4eca912481743b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyContactDamage
-  damage: 14
+  damage: 20
   range: 3.05
   cooldown: 3.5
   windup: 0.57
   recover: 0.6
   damageRadiusScale: 0.9
   lungeDistance: 1.5
-  lungeTime: 0.12
+  lungeTime: 0.1
   lungeHitRadius: 1.6
   aimLockFraction: 0.6
   leadFactor: 0.7
@@ -331,16 +331,16 @@ MonoBehaviour:
       hpMultiplier: 4
       damageMultiplier: 1.3
   - interval: 10
-    maxWaves: 2
+    maxWaves: 3
     entries:
     - prefab: {fileID: 6203631419841849656, guid: 5c576f40662f18a4abdb410c8112a95c, type: 3}
       count: 1
       hpMultiplier: 4.5
-      damageMultiplier: 1.8
+      damageMultiplier: 2
     - prefab: {fileID: 9121166166713209676, guid: b201dc8c1b129a74a9ffad795b879bad, type: 3}
       count: 1
       hpMultiplier: 5.04
-      damageMultiplier: 2
+      damageMultiplier: 4
   spawnRadius: 3
   maxAlive: 4
   firstDelay: 4
